@@ -28,6 +28,8 @@
   let showResourceFormByTask = { 'DEV-01': false };
   let advanceDraftByTask = {};
   let resourceDraftByTask = {};
+  let editingAdvanceByKey = {};
+  let editingResourceByKey = {};
   let lightboxState = {
     isOpen: false,
     taskId: null,
@@ -1454,6 +1456,92 @@
               const numOrder = protoChronoOrder === 'asc'
                 ? String(chronoPos + 1).padStart(2, '0')
                 : String(indexedImages.length - chronoPos).padStart(2, '0');
+              const editKey = `${task.id}__${img.origIdx}`;
+              const editDraft = editingAdvanceByKey[editKey];
+
+              if (editDraft) {
+                return `
+                  <article class="advance-card" style="border:2px solid var(--accent-terracotta); box-shadow:var(--shadow-float);">
+                    <div>
+                      <div class="advance-card-top-meta" style="background:var(--accent-terracotta-soft);">
+                        <span style="color:var(--accent-terracotta-dark);">✏️ EDITANDO AVANCE #${numOrder}</span>
+                        <span style="color:var(--text-primary);">📅 ${editDraft.fecha || ''}</span>
+                      </div>
+
+                      <!-- Vista previa actual + Cambiar Imagen en la misma Card -->
+                      <div class="advance-card-media" style="height:190px; cursor:default;">
+                        <img src="${editDraft.url}" alt="Vista previa edición" />
+                      </div>
+                      <div style="padding:10px 14px; background:var(--bg-subtle); border-bottom:1px solid var(--line-hair); display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+                          <label class="btn btn-primary" style="cursor:pointer; padding:5px 10px; font-size:10.5px;">
+                            📷 Cambiar Imagen desde PC
+                            <input type="file" accept="image/*" style="display:none;" onchange="handleInlineChangeAdvanceImage('${task.id}', ${img.origIdx}, this)" />
+                          </label>
+                          <span style="font-size:10.5px; color:var(--text-secondary);">
+                            ${editDraft.fileName ? `Nueva: <strong>${editDraft.fileName}</strong>` : 'O edita la ruta/URL abajo'}
+                          </span>
+                        </div>
+                        <input type="text"
+                          class="input-control"
+                          style="padding:6px 9px; font-size:11.5px;"
+                          placeholder="Ruta o URL de la imagen (ej. ./assets/img/...)"
+                          value="${(editDraft.url && !editDraft.url.startsWith('data:')) ? editDraft.url.replace(/"/g, '&quot;') : ''}"
+                          oninput="updateInlineAdvanceField('${task.id}', ${img.origIdx}, 'url', this.value)" />
+                      </div>
+
+                      <!-- Campos editables en la misma Card -->
+                      <div class="advance-card-body" style="gap:10px;">
+                        <div>
+                          <label class="field-label" style="margin-bottom:4px;">🏷️ Título del Avance</label>
+                          <input type="text"
+                            class="input-control"
+                            style="font-weight:700;"
+                            value="${(editDraft.titulo || '').replace(/"/g, '&quot;')}"
+                            oninput="updateInlineAdvanceField('${task.id}', ${img.origIdx}, 'titulo', this.value)" />
+                        </div>
+
+                        <div class="grid-2" style="gap:8px;">
+                          <div>
+                            <label class="field-label" style="margin-bottom:4px;">📅 Fecha Publicación</label>
+                            <input type="date"
+                              class="input-control"
+                              style="padding:6px 8px; font-size:12px;"
+                              value="${editDraft.fecha || ''}"
+                              onchange="updateInlineAdvanceField('${task.id}', ${img.origIdx}, 'fecha', this.value)" />
+                          </div>
+                          <div>
+                            <label class="field-label" style="margin-bottom:4px;">👤 Autor</label>
+                            <input type="text"
+                              class="input-control"
+                              style="padding:6px 8px; font-size:12px;"
+                              value="${(editDraft.autor || '').replace(/"/g, '&quot;')}"
+                              oninput="updateInlineAdvanceField('${task.id}', ${img.origIdx}, 'autor', this.value)" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="field-label" style="margin-bottom:4px;">📝 Texto Descriptivo del Avance</label>
+                          <textarea rows="4"
+                            class="textarea-control"
+                            style="font-size:12.5px;"
+                            oninput="updateInlineAdvanceField('${task.id}', ${img.origIdx}, 'descripcion', this.value)">${editDraft.descripcion || ''}</textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="advance-card-footer" style="background:var(--bg-subtle);">
+                      <button type="button" class="btn btn-secondary" style="padding:6px 11px; font-size:10.5px;" onclick="cancelInlineEditAdvance('${task.id}', ${img.origIdx})">
+                        ✕ Cancelar
+                      </button>
+                      <button type="button" class="btn btn-wood" style="padding:6px 13px; font-size:10.5px;" onclick="saveInlineEditAdvance('${task.id}', ${img.origIdx})">
+                        💾 Guardar Cambios
+                      </button>
+                    </div>
+                  </article>
+                `;
+              }
+
               return `
                 <article class="advance-card">
                   <div>
@@ -1606,6 +1694,83 @@
             ${resources.map((arch, fIdx) => {
               const icon = getResourceCategoryIcon(arch.categoria || arch.tipo);
               const hasUrl = Boolean(arch.url && arch.url.trim());
+              const resEditKey = `${task.id}__${fIdx}`;
+              const resDraft = editingResourceByKey[resEditKey];
+
+              if (resDraft) {
+                return `
+                  <div class="resource-card" style="border:2px solid var(--accent-sage); box-shadow:var(--shadow-float);">
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                      <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:var(--accent-sage); letter-spacing:0.06em;">
+                        ✏️ Editando Recurso en la Card
+                      </div>
+                      <div>
+                        <label class="field-label" style="margin-bottom:3px;">🏷️ Título / Nombre del Recurso</label>
+                        <input type="text"
+                          class="input-control"
+                          style="padding:6px 9px; font-weight:700;"
+                          value="${(resDraft.nombre || '').replace(/"/g, '&quot;')}"
+                          oninput="updateInlineResourceField('${task.id}', ${fIdx}, 'nombre', this.value)" />
+                      </div>
+                      <div class="grid-2" style="gap:8px;">
+                        <div>
+                          <label class="field-label" style="margin-bottom:3px;">🗂️ Categoría</label>
+                          <select class="select-control" style="padding:6px 8px; font-size:11.5px;" onchange="updateInlineResourceField('${task.id}', ${fIdx}, 'categoria', this.value)">
+                            ${[
+                              'Modelo 3D (.STL / .FBX / .OBJ / .3MF)',
+                              'Modelo BIM / CAD (.RVT / .IFC / .DWG / .STEP)',
+                              'Enlace Externo / Repositorio Web',
+                              'Documento Técnico / Plano / Cálculo (.PDF / .XLSX / .DOCX)',
+                              'Código / Firmware IoT / Escena Unity VR'
+                            ].map(cat => `
+                              <option value="${cat}" ${resDraft.categoria === cat ? 'selected' : ''}>${cat}</option>
+                            `).join('')}
+                          </select>
+                        </div>
+                        <div>
+                          <label class="field-label" style="margin-bottom:3px;">📅 Fecha</label>
+                          <input type="date"
+                            class="input-control"
+                            style="padding:6px 8px; font-size:11.5px;"
+                            value="${resDraft.fecha || ''}"
+                            onchange="updateInlineResourceField('${task.id}', ${fIdx}, 'fecha', this.value)" />
+                        </div>
+                      </div>
+                      <div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:4px;">
+                          <label class="field-label" style="margin:0;">🔗 Enlace / Archivo</label>
+                          <label class="btn btn-secondary" style="padding:3px 8px; font-size:9.5px; cursor:pointer;">
+                            📎 Cambiar Archivo PC
+                            <input type="file" style="display:none;" onchange="handleInlineChangeResourceFile('${task.id}', ${fIdx}, this)" />
+                          </label>
+                        </div>
+                        <input type="text"
+                          class="input-control"
+                          style="padding:6px 9px; font-size:11.5px;"
+                          placeholder="URL o enlace del recurso..."
+                          value="${(resDraft.url && !resDraft.url.startsWith('data:')) ? resDraft.url.replace(/"/g, '&quot;') : ''}"
+                          oninput="updateInlineResourceField('${task.id}', ${fIdx}, 'url', this.value)" />
+                      </div>
+                      <div>
+                        <label class="field-label" style="margin-bottom:3px;">📝 Descripción</label>
+                        <textarea rows="3"
+                          class="textarea-control"
+                          style="font-size:12px;"
+                          oninput="updateInlineResourceField('${task.id}', ${fIdx}, 'descripcion', this.value)">${resDraft.descripcion || ''}</textarea>
+                      </div>
+                    </div>
+                    <div class="resource-card-footer">
+                      <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:10px;" onclick="cancelInlineEditResource('${task.id}', ${fIdx})">
+                        ✕ Cancelar
+                      </button>
+                      <button type="button" class="btn btn-primary" style="padding:5px 12px; font-size:10px;" onclick="saveInlineEditResource('${task.id}', ${fIdx})">
+                        💾 Guardar Cambios
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }
+
               return `
                 <div class="resource-card">
                   <div>
@@ -2004,22 +2169,66 @@
     render();
   };
 
+  // Edición en línea directamente dentro de la misma Card de Avance (sin ventanas flotantes)
   window.editProtoAdvance = function (taskId, imgIdx) {
     const task = protoTasks.find(t => t.id === taskId);
     if (!task || !task.imagenes || !task.imagenes[imgIdx]) return;
     const item = task.imagenes[imgIdx];
+    const editKey = `${taskId}__${imgIdx}`;
+    editingAdvanceByKey[editKey] = {
+      titulo: item.titulo || '',
+      descripcion: item.descripcion || '',
+      fecha: item.fecha || task.fechaInicio || new Date().toISOString().slice(0, 10),
+      autor: item.autor || task.responsable || 'Alex / Sebastián',
+      url: item.url || '',
+      fileName: ''
+    };
+    render();
+  };
 
-    const nuevoTitulo = prompt('Editar título del avance:', item.titulo || '');
-    if (nuevoTitulo === null) return;
-    const nuevaFecha = prompt('Editar fecha de publicación (YYYY-MM-DD):', item.fecha || new Date().toISOString().slice(0, 10));
-    if (nuevaFecha === null) return;
-    const nuevaDesc = prompt('Editar texto descriptivo del avance:', item.descripcion || '');
-    if (nuevaDesc === null) return;
+  window.updateInlineAdvanceField = function (taskId, imgIdx, field, value) {
+    const editKey = `${taskId}__${imgIdx}`;
+    if (!editingAdvanceByKey[editKey]) return;
+    editingAdvanceByKey[editKey][field] = value;
+  };
 
-    item.titulo = nuevoTitulo.trim() || item.titulo;
-    item.fecha = nuevaFecha.trim() || item.fecha;
-    item.descripcion = nuevaDesc.trim();
+  window.handleInlineChangeAdvanceImage = function (taskId, imgIdx, inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const editKey = `${taskId}__${imgIdx}`;
+    if (!editingAdvanceByKey[editKey]) return;
+    editingAdvanceByKey[editKey].fileName = file.name;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      editingAdvanceByKey[editKey].url = e.target.result;
+      render();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.saveInlineEditAdvance = function (taskId, imgIdx) {
+    const task = protoTasks.find(t => t.id === taskId);
+    const editKey = `${taskId}__${imgIdx}`;
+    const draft = editingAdvanceByKey[editKey];
+    if (!task || !task.imagenes || !task.imagenes[imgIdx] || !draft) return;
+
+    const item = task.imagenes[imgIdx];
+    item.titulo = (draft.titulo || '').trim() || item.titulo;
+    item.descripcion = (draft.descripcion || '').trim();
+    item.fecha = draft.fecha || item.fecha;
+    item.autor = (draft.autor || '').trim() || item.autor;
+    if (draft.url && draft.url.trim()) {
+      item.url = draft.url.trim();
+    }
+
+    delete editingAdvanceByKey[editKey];
     saveProtoTasks();
+    render();
+  };
+
+  window.cancelInlineEditAdvance = function (taskId, imgIdx) {
+    const editKey = `${taskId}__${imgIdx}`;
+    delete editingAdvanceByKey[editKey];
     render();
   };
 
@@ -2142,24 +2351,76 @@
     render();
   };
 
+  // Edición en línea directamente dentro de la Card del Recurso
   window.editProtoResource = function (taskId, fileIdx) {
     const task = protoTasks.find(t => t.id === taskId);
     if (!task || !task.archivos || !task.archivos[fileIdx]) return;
     const arch = task.archivos[fileIdx];
+    const resEditKey = `${taskId}__${fileIdx}`;
+    editingResourceByKey[resEditKey] = {
+      nombre: arch.nombre || '',
+      categoria: arch.categoria || 'Modelo 3D (.STL / .FBX / .OBJ / .3MF)',
+      tipo: arch.tipo || 'Recurso Técnico',
+      url: arch.url || '',
+      descripcion: arch.descripcion || '',
+      fecha: arch.fecha || new Date().toISOString().slice(0, 10)
+    };
+    render();
+  };
 
-    const nuevoNombre = prompt('Editar nombre o título del recurso:', arch.nombre || '');
-    if (nuevoNombre === null) return;
-    const nuevaUrl = prompt('Editar enlace / URL del recurso (opcional):', (arch.url && !arch.url.startsWith('data:')) ? arch.url : '');
-    if (nuevaUrl === null) return;
-    const nuevaDesc = prompt('Editar descripción del recurso:', arch.descripcion || '');
-    if (nuevaDesc === null) return;
+  window.updateInlineResourceField = function (taskId, fileIdx, field, value) {
+    const resEditKey = `${taskId}__${fileIdx}`;
+    if (!editingResourceByKey[resEditKey]) return;
+    editingResourceByKey[resEditKey][field] = value;
+  };
 
-    arch.nombre = nuevoNombre.trim() || arch.nombre;
-    if (!arch.url || !arch.url.startsWith('data:') || nuevaUrl.trim()) {
-      arch.url = nuevaUrl.trim();
+  window.handleInlineChangeResourceFile = function (taskId, fileIdx, inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const resEditKey = `${taskId}__${fileIdx}`;
+    const draft = editingResourceByKey[resEditKey];
+    if (!draft) return;
+    const ext = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'ARCHIVO';
+    const sizeKB = Math.max(1, Math.round(file.size / 1024));
+    draft.nombre = file.name;
+    draft.tipo = `Archivo .${ext} (${sizeKB} KB)`;
+
+    if (file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        draft.url = e.target.result;
+        render();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      render();
     }
-    arch.descripcion = nuevaDesc.trim();
+  };
+
+  window.saveInlineEditResource = function (taskId, fileIdx) {
+    const task = protoTasks.find(t => t.id === taskId);
+    const resEditKey = `${taskId}__${fileIdx}`;
+    const draft = editingResourceByKey[resEditKey];
+    if (!task || !task.archivos || !task.archivos[fileIdx] || !draft) return;
+
+    const arch = task.archivos[fileIdx];
+    arch.nombre = (draft.nombre || '').trim() || arch.nombre;
+    arch.categoria = draft.categoria || arch.categoria;
+    arch.tipo = draft.tipo || arch.tipo;
+    arch.fecha = draft.fecha || arch.fecha;
+    arch.descripcion = (draft.descripcion || '').trim();
+    if (typeof draft.url === 'string') {
+      arch.url = draft.url.trim();
+    }
+
+    delete editingResourceByKey[resEditKey];
     saveProtoTasks();
+    render();
+  };
+
+  window.cancelInlineEditResource = function (taskId, fileIdx) {
+    const resEditKey = `${taskId}__${fileIdx}`;
+    delete editingResourceByKey[resEditKey];
     render();
   };
 
