@@ -403,28 +403,36 @@
       <header class="site-header no-print">
         <div class="container">
           <div class="header-top">
-            <div class="brand-group">
-              <div class="brand-emblem">GS</div>
-              <div>
-                <div class="brand-badges">
-                  <span class="badge badge-charcoal">SENA · SENNOVA CTM (MEDIALAB 107)</span>
-                  <span class="badge badge-wood">INTERZUM BOGOTÁ · MAYO 2028</span>
-                  <span class="badge badge-sena">AUTORES: ALEX · SEBASTIÁN · LILIANA</span>
+            <div class="header-left-stack">
+              <div class="brand-group">
+                <div class="brand-emblem">GS</div>
+                <div>
+                  <div class="brand-badges">
+                    <span class="badge badge-charcoal">SENA · SENNOVA CTM (MEDIALAB 107)</span>
+                    <span class="badge badge-wood">INTERZUM BOGOTÁ · MAYO 2028</span>
+                    <span class="badge badge-sena">AUTORES: ALEX · SEBASTIÁN · LILIANA</span>
+                  </div>
+                  <h1 class="brand-title">Geodome Smart · Formulación MGA & Diseño de Producto</h1>
                 </div>
-                <h1 class="brand-title">Geodome Smart · Formulación MGA & Diseño de Producto</h1>
+              </div>
+
+              <div class="header-actions">
+                <button class="btn btn-primary" onclick="exportWordDocument('Plantilla_MGA')">
+                  📄 Formulación MGA (.doc)
+                </button>
+                <button class="btn btn-wood" onclick="exportFichaTecnicaWord()">
+                  📋 Ficha Técnica Producto (.doc)
+                </button>
+                <button class="btn btn-secondary" onclick="exportMatrixCSV()">
+                  📊 Matriz (.csv)
+                </button>
               </div>
             </div>
 
-            <div class="header-actions">
-              <button class="btn btn-primary" onclick="exportWordDocument('Plantilla_MGA')">
-                📄 Formulación MGA (.doc)
-              </button>
-              <button class="btn btn-wood" onclick="exportFichaTecnicaWord()">
-                📋 Ficha Técnica Producto (.doc)
-              </button>
-              <button class="btn btn-secondary" onclick="exportMatrixCSV()">
-                📊 Matriz (.csv)
-              </button>
+            <div class="header-sena-block">
+              <img src="./assets/img/image6.png" alt="Logo SENA" class="header-sena-logo" />
+              <span class="header-sena-center-title">Centro Tecnológico del Mobiliario</span>
+              <span class="header-sena-center-sub">Regional Antioquia · SENNOVA</span>
             </div>
           </div>
 
