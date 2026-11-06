@@ -1,0 +1,18 @@
+{
+  "name": "domo-ecoturistico-sennova",
+  "version": "1.0.0",
+  "description": "Plataforma de Formulación MGA, Prototipo a Escala y Gemelo Digital VR - Proyecto Geodome Smart SENA SENNOVA CTM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexzrios/domoEcoturistico.git"
+  },
+  "author": "Alex · Sebastián · Liliana - SENA CTM Medialab 107",
+  "license": "MIT"
+}
