@@ -430,7 +430,7 @@
             </div>
 
             <div class="header-sena-block">
-              <img src="./assets/img/image6.png" alt="Logo SENA" class="header-sena-logo" />
+              <img src="./assets/img/logo-sena-verde.svg" alt="Logo SENA" class="header-sena-logo" />
               <span class="header-sena-center-title">Centro Tecnológico del Mobiliario</span>
               <span class="header-sena-center-sub">Regional Antioquia · SENNOVA</span>
             </div>

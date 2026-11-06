@@ -130,16 +130,16 @@ html, body {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--accent-terracotta-dark);
+  color: #161615;
   line-height: 1.2;
 }
 
 .header-sena-center-sub {
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: #161615;
   margin-top: 2px;
 }
 
