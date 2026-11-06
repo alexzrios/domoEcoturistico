@@ -1,0 +1,1427 @@
+/* ==========================================================================
+   GEODOME SMART - MINIMALIST INDUSTRIAL PRODUCT DESIGN & ARCHITECTURAL UI
+   Inspirado en Láminas de Diseño Industrial, Arquitectura Modular y Portafolio Editorial
+   Paleta: Papel Alabastro (#F3F0EA) · Carbón Mate (#161615) · Terracota Madera (#C86D44) · Salvia (#4F684E)
+   ========================================================================== */
+
+:root {
+  /* Fondos de Estudio de Diseño Industrial */
+  --bg-canvas: #F3F0EA;
+  --bg-sheet: #FAF8F5;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #EAE5DC;
+  --bg-charcoal: #161615;
+  --bg-charcoal-soft: #22211F;
+
+  /* Acentos de Diseño de Producto */
+  --accent-terracotta: #C86D44;
+  --accent-terracotta-dark: #A9542F;
+  --accent-terracotta-soft: rgba(200, 109, 68, 0.12);
+
+  --accent-sage: #4A6B4D;
+  --accent-sage-soft: rgba(74, 107, 77, 0.12);
+
+  --accent-ochre: #B8863B;
+  --accent-ochre-soft: rgba(184, 134, 59, 0.14);
+
+  --accent-slate: #35586C;
+  --accent-slate-soft: rgba(53, 88, 108, 0.11);
+
+  --accent-crimson: #B43E3E;
+  --accent-crimson-soft: rgba(180, 62, 62, 0.11);
+
+  /* Tipografía de Alto Contraste Editorial */
+  --text-primary: #161615;
+  --text-secondary: #4A4843;
+  --text-muted: #78746C;
+  --text-on-dark: #F7F5F0;
+
+  /* Líneas de Dibujo Técnico (Drafting Hairlines) */
+  --line-hair: #D8D2C7;
+  --line-strong: #B8B0A2;
+  --line-dark: #161615;
+
+  /* Sombras de Maqueta / Papel Arquitectónico */
+  --shadow-sheet: 0 12px 32px -12px rgba(22, 22, 21, 0.08), 0 2px 6px rgba(22, 22, 21, 0.04);
+  --shadow-float: 0 20px 40px -15px rgba(22, 22, 21, 0.14);
+
+  /* Radios Minimalistas */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-arch: 180px 180px 8px 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-canvas);
+  background-image:
+    linear-gradient(to right, rgba(22, 22, 21, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 22, 21, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  color: var(--text-primary);
+  font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.55;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1460px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ==========================================================================
+   HEADER EDITORIAL & NAVEGACIÓN NUMERADA DE ESTUDIO (PROTAGONISMO SUPERIOR)
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 248, 245, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--bg-charcoal);
+  box-shadow: 0 6px 20px rgba(22, 22, 21, 0.05);
+}
+
+.header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0 14px 0;
+  border-bottom: 1px solid var(--line-hair);
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-emblem {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 19px;
+  letter-spacing: 0.08em;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.brand-emblem::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-terracotta);
+}
+
+.brand-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.badge-sena {
+  background: var(--accent-sage-soft);
+  color: var(--accent-sage);
+  border: 1px solid rgba(74, 107, 77, 0.3);
+}
+
+.badge-wood {
+  background: var(--accent-terracotta-soft);
+  color: var(--accent-terracotta-dark);
+  border: 1px solid rgba(200, 109, 68, 0.3);
+}
+
+.badge-unity {
+  background: var(--accent-slate-soft);
+  color: var(--accent-slate);
+  border: 1px solid rgba(53, 88, 108, 0.28);
+}
+
+.badge-charcoal {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+}
+
+.brand-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Botones de Estudio de Diseño */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+  border-color: var(--bg-charcoal);
+}
+
+.btn-primary:hover {
+  background: var(--accent-terracotta);
+  border-color: var(--accent-terracotta);
+  color: #fff;
+}
+
+.btn-wood {
+  background: var(--accent-terracotta);
+  color: #fff;
+  border-color: var(--accent-terracotta);
+}
+
+.btn-wood:hover {
+  background: var(--accent-terracotta-dark);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--line-strong);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--text-primary);
+}
+
+.btn-ai {
+  background: var(--bg-charcoal);
+  color: #fff;
+  border-color: var(--bg-charcoal);
+}
+
+.btn-ai:hover {
+  background: var(--accent-slate);
+  border-color: var(--accent-slate);
+}
+
+/* Navegación Principal Simplificada (4 Ítems + Submenús Desplegables) */
+.nav-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: stretch;
+  position: relative;
+}
+
+@media (max-width: 820px) {
+  .nav-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.nav-item-wrap {
+  position: relative;
+  display: flex;
+  border-right: 1px solid var(--line-hair);
+}
+
+.nav-item-wrap:last-child {
+  border-right: none;
+}
+
+.tab-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 13px 16px;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(22, 22, 21, 0.03);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-terracotta);
+  background: rgba(200, 109, 68, 0.07);
+}
+
+.tab-caret {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-left: 2px;
+  transition: transform 0.18s ease;
+}
+
+.nav-item-wrap:hover .tab-caret {
+  transform: rotate(180deg);
+  color: var(--accent-terracotta);
+}
+
+/* Submenú Desplegable en el Header */
+.nav-submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-charcoal);
+  border-top: 2px solid var(--accent-terracotta);
+  box-shadow: var(--shadow-float);
+  display: none;
+  flex-direction: column;
+  z-index: 200;
+}
+
+.nav-item-wrap:hover .nav-submenu {
+  display: flex;
+}
+
+.submenu-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-hair);
+  padding: 11px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.15s ease;
+}
+
+.submenu-btn:last-child {
+  border-bottom: none;
+}
+
+.submenu-btn:hover {
+  background: var(--bg-sheet);
+  color: var(--text-primary);
+  padding-left: 20px;
+}
+
+.submenu-btn.active {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+}
+
+/* Barra de Sub-navegación rápida dentro de la sección */
+.section-subnav-bar {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--line-strong);
+  padding: 4px;
+  gap: 4px;
+  margin-top: 18px;
+  box-shadow: var(--shadow-sheet);
+}
+
+.section-subnav-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.section-subnav-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-sheet);
+}
+
+.section-subnav-btn.active {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+}
+
+.tab-num {
+  font-size: 11.5px;
+  font-weight: 900;
+  color: var(--accent-terracotta);
+  font-variant-numeric: tabular-nums;
+}
+
+.tab-pill {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--line-strong);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.tab-btn.active .tab-pill {
+  background: var(--accent-terracotta);
+  color: #fff;
+  border-color: var(--accent-terracotta);
+}
+
+/* ==========================================================================
+   HERO BANNER ARQUITECTÓNICO DE ALTO PROTAGONISMO (IMAGEN ISOMÉTRICA CENTRAL)
+   ========================================================================== */
+.hero-banner {
+  margin-top: 22px;
+  background: #FFFFFF;
+  border: 1px solid var(--line-strong);
+  border-top: 3px solid var(--bg-charcoal);
+  padding: 32px 36px;
+  box-shadow: var(--shadow-sheet);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cruces de registro técnico (+) en las esquinas */
+.hero-banner::before,
+.hero-banner::after {
+  content: '+';
+  position: absolute;
+  font-family: monospace;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.hero-banner::before { top: 10px; left: 12px; }
+.hero-banner::after { top: 10px; right: 12px; }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 0.92fr 1.28fr;
+  gap: 36px;
+  align-items: center;
+}
+
+@media (max-width: 1100px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hero-subtitle {
+  display: inline-block;
+  color: var(--accent-terracotta-dark);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+}
+
+.hero-display-stack {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.hero-display-stack .accent-word {
+  color: var(--accent-terracotta);
+  display: block;
+  font-size: 23px;
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.hero-lead {
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  max-width: 600px;
+  margin-bottom: 18px;
+  line-height: 1.58;
+}
+
+/* Pilares de Diseño de Producto en el Hero (Inspirado en Lámina Domo Habitável) */
+.hero-pillars-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 18px;
+  margin-bottom: 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-hair);
+  border-bottom: 1px solid var(--line-hair);
+}
+
+.hero-pillar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.hero-pillar-icon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-sheet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.hero-pillar-title {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  display: block;
+}
+
+.hero-pillar-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+/* Escenario Principal para la Imagen Isométrica Única */
+.hero-isometric-stage {
+  position: relative;
+  background: #FFFFFF;
+  border: 1px solid var(--line-hair);
+  padding: 14px 18px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-iso-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-hair);
+  margin-bottom: 8px;
+}
+
+.hero-isometric-img-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-isometric-img-wrap img {
+  width: 100%;
+  max-height: 390px;
+  object-fit: contain;
+  display: block;
+}
+
+.hero-iso-caption-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--line-hair);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   KPI STRIP - LÁMINA DE ESPECIFICACIONES NUMERADAS
+   ========================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  box-shadow: var(--shadow-sheet);
+}
+
+@media (max-width: 960px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kpi-card {
+  padding: 16px 20px;
+  border-right: 1px solid var(--line-hair);
+  position: relative;
+}
+
+.kpi-card:last-child {
+  border-right: none;
+}
+
+.kpi-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 900;
+  margin-top: 6px;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.kpi-value.emerald { color: var(--accent-sage); }
+.kpi-value.gold { color: var(--accent-terracotta); }
+.kpi-value.cyan { color: var(--accent-slate); }
+
+.kpi-sub {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+/* ==========================================================================
+   PANELES Y LÁMINAS TÉCNICAS (ESTILO PLANO ARQUITECTÓNICO)
+   ========================================================================== */
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  padding: 24px 26px;
+  margin-top: 20px;
+  box-shadow: var(--shadow-sheet);
+  position: relative;
+}
+
+.panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line-hair);
+}
+
+.panel-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-terracotta);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.panel-title {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.panel-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  max-width: 820px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 18px;
+}
+
+.grid-2-equal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1024px) {
+  .grid-2, .grid-2-equal, .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.subcard {
+  background: var(--bg-sheet);
+  border: 1px solid var(--line-hair);
+  padding: 16px;
+}
+
+.subcard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line-hair);
+}
+
+.subcard-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   FORMULARIOS Y CAMPOS DE EDICIÓN TÉCNICA
+   ========================================================================== */
+.field-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.input-control, .select-control, .textarea-control {
+  width: 100%;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.55;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.input-control:focus, .select-control:focus, .textarea-control:focus {
+  border-color: var(--accent-terracotta);
+  box-shadow: 0 0 0 2px rgba(200, 109, 68, 0.15);
+}
+
+.textarea-control {
+  resize: vertical;
+}
+
+/* ==========================================================================
+   TABLAS TÉCNICAS & DIAGRAMA DE GANTT
+   ========================================================================== */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line-hair);
+  background: var(--bg-card);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.data-table th {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 11px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-strong);
+  border-right: 1px solid var(--line-hair);
+}
+
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line-hair);
+  border-right: 1px solid var(--line-hair);
+  vertical-align: top;
+  color: var(--text-secondary);
+}
+
+.data-table tr:hover td {
+  background: var(--bg-sheet);
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-subtle);
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-terracotta);
+}
+
+.gantt-cell {
+  padding: 4px !important;
+  text-align: center;
+  min-width: 56px;
+}
+
+.gantt-bar {
+  height: 20px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+.gantt-oe1 { background: var(--accent-slate); }
+.gantt-oe2 { background: var(--accent-sage); }
+.gantt-oe3 { background: var(--bg-charcoal); }
+.gantt-feria { background: var(--accent-terracotta); color: #fff; }
+
+/* ==========================================================================
+   MÓDULO 1: FORMULACIÓN MGA (SIDEBAR NUMERADO + EDITOR + COPILOTO IA)
+   ========================================================================== */
+.formulacion-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 330px;
+  gap: 20px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+@media (max-width: 1240px) {
+  .formulacion-layout {
+    grid-template-columns: 250px 1fr;
+  }
+  .ai-panel-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 860px) {
+  .formulacion-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mga-sidebar {
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  padding: 16px;
+  position: sticky;
+  top: 118px;
+  max-height: calc(100vh - 138px);
+  overflow-y: auto;
+  box-shadow: var(--shadow-sheet);
+}
+
+.mga-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 10px;
+  border-top: 1px solid var(--line-hair);
+}
+
+.mga-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 8px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-hair);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mga-nav-item:hover {
+  background: var(--bg-sheet);
+  color: var(--text-primary);
+  padding-left: 12px;
+}
+
+.mga-nav-item.active {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+  padding-left: 12px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.revision { background: var(--accent-ochre); }
+.status-dot.aprobado { background: var(--accent-sage); }
+.status-dot.cambios { background: var(--accent-crimson); }
+
+/* Selector de Estado (En Revisión / Aprobado / Necesita Cambios) */
+.status-selector-group {
+  display: inline-flex;
+  background: var(--bg-sheet);
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  gap: 3px;
+}
+
+.status-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.status-btn.active-revision {
+  background: var(--accent-ochre);
+  color: #fff;
+}
+
+.status-btn.active-aprobado {
+  background: var(--accent-sage);
+  color: #fff;
+}
+
+.status-btn.active-cambios {
+  background: var(--accent-crimson);
+  color: #fff;
+}
+
+/* ==========================================================================
+   AUTORES DE FORMULACIÓN (ALEX / SEBASTIÁN / LILIANA) Y @MENCIONES
+   ========================================================================== */
+.author-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.author-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.author-chip:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.author-chip.active-Alex {
+  background: var(--accent-slate);
+  border-color: var(--accent-slate);
+  color: #fff;
+}
+
+.author-chip.active-Sebastian {
+  background: var(--accent-sage);
+  border-color: var(--accent-sage);
+  color: #fff;
+}
+
+.author-chip.active-Liliana {
+  background: var(--accent-terracotta);
+  border-color: var(--accent-terracotta);
+  color: #fff;
+}
+
+.author-mini-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.author-mini-badge.Alex {
+  background: var(--accent-slate-soft);
+  color: var(--accent-slate);
+  border: 1px solid rgba(53, 88, 108, 0.3);
+}
+
+.author-mini-badge.Sebastian {
+  background: var(--accent-sage-soft);
+  color: var(--accent-sage);
+  border: 1px solid rgba(74, 107, 77, 0.3);
+}
+
+.author-mini-badge.Liliana {
+  background: var(--accent-terracotta-soft);
+  color: var(--accent-terracotta-dark);
+  border: 1px solid rgba(200, 109, 68, 0.3);
+}
+
+.mention-wrapper {
+  position: relative;
+}
+
+.mention-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-charcoal);
+  box-shadow: var(--shadow-float);
+  z-index: 80;
+  width: 280px;
+}
+
+.mention-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-hair);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mention-option:hover {
+  background: var(--bg-subtle);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  margin-top: 6px;
+  font-size: 12.5px;
+}
+
+.task-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* ==========================================================================
+   ASISTENTE IA DE FORMULACIÓN (ESTÉTICA ESTUDIO EDITORIAL)
+   ========================================================================== */
+.ai-copilot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-charcoal);
+  padding: 18px;
+  position: sticky;
+  top: 118px;
+  box-shadow: var(--shadow-sheet);
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line-hair);
+}
+
+.ai-avatar {
+  width: 34px;
+  height: 34px;
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.ai-chip {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-sheet);
+  border: 1px solid var(--line-strong);
+  color: var(--text-primary);
+  padding: 8px 11px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 7px;
+  transition: all 0.15s ease;
+}
+
+.ai-chip:hover {
+  background: var(--bg-charcoal);
+  color: #fff;
+  border-color: var(--bg-charcoal);
+}
+
+.ai-response-box {
+  background: var(--bg-sheet);
+  border: 1px solid var(--line-hair);
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  max-height: 270px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   MÓDULO 4: PROTOTIPO A ESCALA / GEMELO DIGITAL & LÁMINA DE DISEÑO DE PRODUCTO
+   ========================================================================== */
+.proto-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+@media (max-width: 1024px) {
+  .proto-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proto-step-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-hair);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.proto-step-btn:hover {
+  background: var(--bg-sheet);
+}
+
+.proto-step-btn.active {
+  background: var(--bg-charcoal);
+  color: var(--text-on-dark);
+}
+
+.proto-step-btn.active .step-title-text {
+  color: #fff !important;
+}
+
+/* Lámina Arquitectónica / Paleta de Materiales (Inspirada en Ref. 3 Domo Habitável) */
+.architectural-board {
+  background: var(--bg-sheet);
+  border: 1px solid var(--line-strong);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sheet);
+}
+
+.board-grid-3 {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .board-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.material-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.swatch-item {
+  border: 1px solid var(--line-hair);
+  background: var(--bg-card);
+  padding: 6px;
+}
+
+.swatch-color {
+  height: 42px;
+  width: 100%;
+  margin-bottom: 6px;
+  border: 1px solid rgba(22, 22, 21, 0.12);
+}
+
+.swatch-wood {
+  background: linear-gradient(135deg, #D7B38C 0%, #C29668 50%, #CFA67B 100%);
+}
+.swatch-3d-carbon {
+  background: repeating-linear-gradient(45deg, #232322, #232322 4px, #2E2E2C 4px, #2E2E2C 8px);
+}
+.swatch-glass {
+  background: linear-gradient(135deg, #DCE7EB 0%, #B8CED6 100%);
+}
+.swatch-steel {
+  background: linear-gradient(135deg, #B5B8B1 0%, #8E9289 100%);
+}
+.swatch-iot {
+  background: linear-gradient(135deg, #2F5241 0%, #1E382B 100%);
+}
+.swatch-vr {
+  background: linear-gradient(135deg, #35586C 0%, #1F3642 100%);
+}
+
+.swatch-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  display: block;
+  line-height: 1.2;
+}
+
+.swatch-sub {
+  font-size: 9px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.media-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.media-thumb {
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  padding: 6px;
+  position: relative;
+}
+
+.media-thumb img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.media-thumb-caption {
+  padding: 6px 2px 2px 2px;
+  font-size: 10.5px;
+  color: var(--text-primary);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-chip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.file-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-hair);
+  font-size: 12px;
+}
+
+.ficha-tecnica-sheet {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-charcoal);
+  padding: 26px;
+  box-shadow: var(--shadow-sheet);
+}
+
+.ficha-grid-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 14px 0 22px 0;
+}
+
+@media (max-width: 768px) {
+  .ficha-grid-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ficha-meta-box {
+  background: var(--bg-sheet);
+  border: 1px solid var(--line-hair);
+  padding: 12px 14px;
+}
+
+/* ==========================================================================
+   FOOTER & IMPRESIÓN
+   ========================================================================== */
+.site-footer {
+  margin-top: 48px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line-hair);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .panel, .subcard, .ficha-tecnica-sheet {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
