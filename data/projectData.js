@@ -1334,11 +1334,38 @@ Anexo 3.5. Carta de propiedad intelectual.`
       parametrosTecnicos: "Geometría: Domo Geodésico de Marcos Rígidos | Escala Preliminar 3D: 1:10 | Escala Funcional Madera: 1:3 | Normativa de referencia: NSR-10 Título G.",
       documentacionAvance: "Se inicia la revisión de ángulos de corte y longitudes de aristas para estandarizar la menor cantidad de tipos de triángulos/marcos posibles.",
       archivos: [
-        { nombre: "Calculo_Geodesico_Marcos_Rigidos_v1.xlsx", tipo: "Cálculo / Excel", fecha: "2026-11-10" }
+        {
+          nombre: "Calculo_Geodesico_Marcos_Rigidos_v1.xlsx",
+          categoria: "Documento / Cálculo",
+          tipo: "Hoja de Cálculo (.XLSX)",
+          url: "",
+          descripcion: "Matriz de cálculo de ángulos diedros, longitudes de aristas y frecuencias de subdivisión geodésica para escala 1:10 (3D) y 1:3 (Madera CNC).",
+          fecha: "2026-11-10"
+        },
+        {
+          nombre: "Especificacion_Estructural_NSR10_TituloG.pdf",
+          categoria: "Documento / Norma",
+          tipo: "Documento Técnico (.PDF)",
+          url: "https://www.asosismica.org.co/",
+          descripcion: "Referencia normativa colombiana NSR-10 Título G para estructuras de madera y uniones empernadas.",
+          fecha: "2026-11-12"
+        }
       ],
       imagenes: [
-        { titulo: "Vista Isométrica Prototipo Domo Habitable", url: "./assets/img/domo_isometrico_hero.png" },
-        { titulo: "Referencia Estructura Marcos Rígidos y Nodo", url: "./assets/img/image4.png" }
+        {
+          titulo: "Vista Isométrica General del Prototipo Domo Habitable",
+          descripcion: "Definición arquitectónica e isométrica del prototipo a escala combinando estructura geodésica de madera mecanizada en CNC, cerramientos acristalados, terraza perimetral (deck) y módulos de domótica solar IoT.",
+          fecha: "2026-11-10",
+          autor: "Alex / Sebastián",
+          url: "./assets/img/domo_isometrico_hero.png"
+        },
+        {
+          titulo: "Esquema de Marcos Rígidos y Distribución Estructural",
+          descripcion: "Revisión preliminar de la triangulación de marcos rígidos para minimizar la cantidad de referencias de listones en el proceso de corte CNC.",
+          fecha: "2026-11-14",
+          autor: "Sebastián / Equipo CTM",
+          url: "./assets/img/image4.png"
+        }
       ]
     },
     {
@@ -1355,9 +1382,24 @@ Anexo 3.5. Carta de propiedad intelectual.`
       progreso: 0,
       parametrosTecnicos: "Software CAD/BIM: Revit / Rhino-Grasshopper / Fusion 360 | Exportación VR: .FBX / .GLTF (<150k polígonos para fluidez en gafas VR a 90 FPS).",
       documentacionAvance: "Pendiente definir la jerarquía de objetos en el modelo 3D para que los ventanales motorizados y las tiras LED tengan pivotes independientes en Unity.",
-      archivos: [],
+      archivos: [
+        {
+          nombre: "Domo_BIM_LOD350_Estructura.rvt",
+          categoria: "Modelo 3D / BIM",
+          tipo: "Modelo Revit BIM (.RVT)",
+          url: "",
+          descripcion: "Modelo paramétrico base con familias de marcos rígidos, deck y nichos para sensores.",
+          fecha: "2026-12-02"
+        }
+      ],
       imagenes: [
-        { titulo: "Referencia Interior VR-Ready Escala 1:1", url: "./assets/img/image5.png" }
+        {
+          titulo: "Referencia Interior VR-Ready Escala 1:1",
+          descripcion: "Propuesta de espacialidad interior, iluminación natural cenital y mobiliario ergonómico integrado para navegación inmersiva en Unity VR.",
+          fecha: "2026-12-01",
+          autor: "Alex / Sebastián",
+          url: "./assets/img/image5.png"
+        }
       ]
     },
     {
@@ -1374,9 +1416,24 @@ Anexo 3.5. Carta de propiedad intelectual.`
       progreso: 0,
       parametrosTecnicos: "Tipo de unión: Nodo central impreso en 3D con bolsillos hembra angulados + perforación para perno pasante M4/M5 y canal interno para cables JST de 4 pines.",
       documentacionAvance: "Se busca que el nodo impreso en 3D elimine cortes compuestos complejos en la madera y garantice el ángulo exacto de ensamble en seco.",
-      archivos: [],
+      archivos: [
+        {
+          nombre: "Nodo_Conector_Hexavalente_v1.stl",
+          categoria: "Modelo 3D",
+          tipo: "Malla Impresión 3D (.STL)",
+          url: "",
+          descripcion: "Geometría de conector estructural de 6 brazos con anillo central pasacables y alojamientos para pernos M6.",
+          fecha: "2027-01-15"
+        }
+      ],
       imagenes: [
-        { titulo: "Detalle Técnico Nodo Unión Impreso en 3D", url: "./assets/img/detalle_nodo_3d_es.png" }
+        {
+          titulo: "Detalle Técnico Nodo Unión Impreso en 3D (Escala 1:3)",
+          descripcion: "Diseño del conector estructural impreso en 3D (PETG/ABS con fibra) acoplado a los travesaños de madera mecanizada en CNC con fijación oculta y paso interno para sensores IoT.",
+          fecha: "2027-01-15",
+          autor: "Alex / Sebastián",
+          url: "./assets/img/detalle_nodo_3d_es.png"
+        }
       ]
     },
     {

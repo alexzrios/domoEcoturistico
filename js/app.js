@@ -23,6 +23,18 @@
   let activeProtoTaskId = 'DEV-01'; // 'DEV-01'..'DEV-14', 'ALL' o 'FICHA'
   let filterProtoStatus = 'ALL';
   let showLaminaBoard = true;
+  let protoChronoOrder = 'asc'; // 'asc' (cronológico antiguo->reciente) o 'desc' (reciente->antiguo)
+  let showAdvanceFormByTask = { 'DEV-01': true };
+  let showResourceFormByTask = { 'DEV-01': false };
+  let advanceDraftByTask = {};
+  let resourceDraftByTask = {};
+  let lightboxState = {
+    isOpen: false,
+    taskId: null,
+    imgIdx: 0,
+    zoomed: false,
+    customItems: null
+  };
 
   // Filtros de la Matriz Relacional
   let filterOE = 'ALL';
@@ -66,6 +78,31 @@
   } catch (e) {
     protoTasks = JSON.parse(JSON.stringify(PROJECT_DATA.desarrolloPrototipo));
   }
+
+  // Normalizar imágenes (avances cronológicos) y archivos (recursos) para compatibilidad con datos previos
+  protoTasks.forEach(task => {
+    const baseTask = (PROJECT_DATA.desarrolloPrototipo || []).find(bt => bt.id === task.id);
+    if (!Array.isArray(task.imagenes)) task.imagenes = [];
+    task.imagenes.forEach((img, idx) => {
+      const baseImg = (baseTask && Array.isArray(baseTask.imagenes)) ? baseTask.imagenes[idx] : null;
+      if (!img.fecha) img.fecha = (baseImg && baseImg.fecha) || task.fechaInicio || new Date().toISOString().slice(0, 10);
+      if (!img.descripcion) {
+        img.descripcion = (baseImg && baseImg.descripcion) || `Registro de avance visual correspondiente a la etapa "${task.titulo}".`;
+      }
+      if (!img.autor) img.autor = (baseImg && baseImg.autor) || task.responsable || 'Alex / Sebastián';
+    });
+
+    if (!Array.isArray(task.archivos)) task.archivos = [];
+    task.archivos.forEach((arch, idx) => {
+      const baseArch = (baseTask && Array.isArray(baseTask.archivos)) ? baseTask.archivos[idx] : null;
+      if (!arch.categoria) arch.categoria = (baseArch && baseArch.categoria) || 'Documento / Diseño';
+      if (!arch.descripcion) {
+        arch.descripcion = (baseArch && baseArch.descripcion) || `Recurso técnico asociado a ${task.id} (${arch.tipo || 'Archivo'}).`;
+      }
+      if (typeof arch.url === 'undefined') arch.url = (baseArch && baseArch.url) || '';
+      if (!arch.fecha) arch.fecha = (baseArch && baseArch.fecha) || task.fechaInicio || new Date().toISOString().slice(0, 10);
+    });
+  });
 
   let fichaMeta = {};
   try {
@@ -216,12 +253,12 @@
 
     protoTasks.forEach(t => {
       const archivosStr = (t.archivos && t.archivos.length > 0)
-        ? t.archivos.map(f => `• ${f.nombre} (${f.tipo} - ${f.fecha})`).join('<br/>')
-        : 'Sin archivos adjuntos registrados aún.';
+        ? t.archivos.map(f => `• <strong>[${f.categoria || 'Recurso'}] ${f.nombre}</strong> (${f.tipo || 'Archivo'} - ${f.fecha || '-'})` + (f.descripcion ? `<br/>&nbsp;&nbsp;<em>${f.descripcion}</em>` : '') + (f.url && !f.url.startsWith('data:') ? `<br/>&nbsp;&nbsp;Enlace: ${f.url}` : '')).join('<br/>')
+        : 'Sin recursos adjuntos registrados aún.';
 
       const imgsStr = (t.imagenes && t.imagenes.length > 0)
-        ? t.imagenes.map(im => `• Evidencia visual: ${im.titulo}`).join('<br/>')
-        : 'Sin capturas registradas aún.';
+        ? t.imagenes.slice().sort((a, b) => (a.fecha || '').localeCompare(b.fecha || '')).map(im => `• <strong>[${im.fecha || '-'}] ${im.titulo}</strong> (${im.autor || t.responsable}):<br/>&nbsp;&nbsp;${im.descripcion || ''}`).join('<br/>')
+        : 'Sin avances visuales registrados aún.';
 
       etapasHTML += `
         <tr>
@@ -229,7 +266,7 @@
           <td><strong>${t.titulo}</strong><br/><span style="color:#444;">${t.descripcion}</span></td>
           <td><strong>Estado:</strong> ${t.estado} (${t.progreso}%)<br/><strong>Inicio:</strong> ${t.fechaInicio}<br/><strong>Fin:</strong> ${t.fechaFin}<br/><strong>Resp:</strong> ${t.responsable}</td>
           <td><strong>Parámetros Técnicos:</strong><br/>${(t.parametrosTecnicos || '').replace(/\n/g, '<br/>')}<br/><br/><strong>Avances Documentados:</strong><br/>${(t.documentacionAvance || 'En proceso').replace(/\n/g, '<br/>')}</td>
-          <td><strong>Diseños / Archivos:</strong><br/>${archivosStr}<br/><br/><strong>Imágenes:</strong><br/>${imgsStr}</td>
+          <td><strong>Recursos / Modelos 3D / Enlaces:</strong><br/>${archivosStr}<br/><br/><strong>Registro Cronológico de Imágenes:</strong><br/>${imgsStr}</td>
         </tr>
       `;
     });
@@ -570,6 +607,8 @@
           SENA Regional Antioquia · Centro Tecnológico del Mobiliario (CTM - Itagüí) · Ambiente 107 Medialab · Proyecto Geodome Smart – INTERZUM Bogotá 2028
         </div>
       </footer>
+
+      ${renderProtoLightboxModal()}
     `;
 
     attachEvents();
@@ -1028,13 +1067,13 @@
                 <span style="font-size:10px; font-weight:800; color:var(--accent-sage);">DETALLE 1:3</span>
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="border:1px solid var(--line-hair); padding:4px; background:#fff;">
+                <div style="border:1px solid var(--line-hair); padding:4px; background:#fff; cursor:zoom-in;" onclick="openProtoLightbox('DEV-01', 0)" title="Clic para expandir a pantalla completa">
                   <img src="./assets/img/domo_isometrico_hero.png" alt="Isométrico Domo Habitable" style="width:100%; height:112px; object-fit:contain; display:block;" />
-                  <span style="font-size:9.5px; font-weight:700; display:block; margin-top:4px; text-transform:uppercase;">Vista Isométrica Prototipo</span>
+                  <span style="font-size:9.5px; font-weight:700; display:block; margin-top:4px; text-transform:uppercase;">⛶ Vista Isométrica Prototipo</span>
                 </div>
-                <div style="border:1px solid var(--line-hair); padding:4px; background:#fff;">
+                <div style="border:1px solid var(--line-hair); padding:4px; background:#fff; cursor:zoom-in;" onclick="openProtoLightbox('DEV-03', 0)" title="Clic para expandir a pantalla completa">
                   <img src="./assets/img/detalle_nodo_3d_es.png" alt="Detalle Nodo Estructural Impresión 3D" style="width:100%; height:112px; object-fit:contain; display:block;" />
-                  <span style="font-size:9.5px; font-weight:700; display:block; margin-top:4px; text-transform:uppercase;">Detalle Nodo Unión 3D</span>
+                  <span style="font-size:9.5px; font-weight:700; display:block; margin-top:4px; text-transform:uppercase;">⛶ Detalle Nodo Unión 3D</span>
                 </div>
               </div>
             </div>
@@ -1224,81 +1263,480 @@
           </div>
         </div>
 
-        <!-- Fila 3: Galería de Imágenes / Renders y Registro de Archivos de Diseño -->
-        <div class="grid-2-equal">
-          <!-- Galería de Imágenes -->
-          <div class="subcard">
-            <div class="subcard-header">
-              <label class="field-label" style="margin:0; color:var(--accent-slate);">
-                🖼️ Imágenes, Fotos de Prototipo y Capturas VR (${(task.imagenes || []).length})
-              </label>
-              <div class="no-print" style="display:flex; gap:6px;">
-                <label class="btn btn-primary" style="padding:5px 10px; font-size:10.5px; cursor:pointer;">
-                  📷 Subir Imagen PC
-                  <input type="file" accept="image/*" style="display:none;" onchange="handleUploadProtoImage('${task.id}', this)" />
-                </label>
-                <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:10.5px;" onclick="addProtoImageByUrl('${task.id}')">
-                  🔗 Ruta / URL
-                </button>
-              </div>
-            </div>
-
-            ${(task.imagenes && task.imagenes.length > 0) ? `
-              <div class="media-gallery">
-                ${task.imagenes.map((img, iIdx) => `
-                  <div class="media-thumb">
-                    <img src="${img.url}" alt="${img.titulo}" />
-                    <div class="media-thumb-caption">
-                      <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${img.titulo}">${img.titulo}</span>
-                      <button type="button" class="no-print" style="background:transparent; border:none; color:var(--accent-crimson); cursor:pointer; font-weight:800;" onclick="removeProtoImage('${task.id}', ${iIdx})">✕</button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            ` : `
-              <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-                Aún no hay imágenes en esta etapa. Usa <strong>"📷 Subir Imagen PC"</strong> para cargar fotos de las piezas impresas en 3D, cortes en madera o capturas de Unity VR.
-              </p>
-            `}
-          </div>
-
-          <!-- Archivos de Diseño, STL, G-Code, BIM, Unity -->
-          <div class="subcard">
-            <div class="subcard-header">
-              <label class="field-label" style="margin:0; color:var(--accent-sage);">
-                📁 Diseños, Planos, Archivos .STL / .FBX / .RVT / Código (${(task.archivos || []).length})
-              </label>
-              <div class="no-print" style="display:flex; gap:6px;">
-                <label class="btn btn-wood" style="padding:5px 10px; font-size:10.5px; cursor:pointer;">
-                  📎 Vincular Archivo PC
-                  <input type="file" style="display:none;" onchange="handleSelectProtoFile('${task.id}', this)" />
-                </label>
-                <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:10.5px;" onclick="addProtoFileManual('${task.id}')">
-                  ➕ Manual / Link
-                </button>
-              </div>
-            </div>
-
-            ${(task.archivos && task.archivos.length > 0) ? `
-              <div class="file-chip-list">
-                ${task.archivos.map((arch, fIdx) => `
-                  <div class="file-chip">
-                    <div>
-                      <strong style="color:var(--text-primary); display:block;">📄 ${arch.nombre}</strong>
-                      <span style="font-size:11px; color:var(--accent-slate);">Formato/Tipo: ${arch.tipo} · Fecha: ${arch.fecha}</span>
-                    </div>
-                    <button type="button" class="no-print" style="background:transparent; border:none; color:var(--accent-crimson); cursor:pointer; font-weight:800;" onclick="removeProtoFile('${task.id}', ${fIdx})">✕</button>
-                  </div>
-                `).join('')}
-              </div>
-            ` : `
-              <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-                Registra aquí los archivos generados en esta etapa (ej. <code>Nodo_Union_v2.stl</code>, <code>Domo_BIM.rvt</code>, <code>Corte_Marcos.gcode</code>, <code>Escena_Domo.unitypackage</code>).
-              </p>
-            `}
-          </div>
+        <!-- Fila 3: Panel de Avances Visuales Cronológicos (Cards + Pantalla Completa) y Panel de Recursos de la Tarea -->
+        <div class="proto-panels-stack">
+          ${renderProtoAdvancesPanel(task)}
+          ${renderProtoResourcesPanel(task)}
         </div>
       </section>
+    `;
+  }
+
+  function getAdvanceDraft(taskId) {
+    if (!advanceDraftByTask[taskId]) {
+      advanceDraftByTask[taskId] = {
+        titulo: '',
+        descripcion: '',
+        fecha: new Date().toISOString().slice(0, 10),
+        autor: 'Alex / Sebastián',
+        url: '',
+        fileName: ''
+      };
+    }
+    return advanceDraftByTask[taskId];
+  }
+
+  function getResourceDraft(taskId) {
+    if (!resourceDraftByTask[taskId]) {
+      resourceDraftByTask[taskId] = {
+        nombre: '',
+        categoria: 'Modelo 3D (.STL / .FBX / .OBJ)',
+        tipo: 'Modelo 3D / CAD',
+        url: '',
+        descripcion: '',
+        fecha: new Date().toISOString().slice(0, 10)
+      };
+    }
+    return resourceDraftByTask[taskId];
+  }
+
+  function formatFechaPublicacion(fechaIso) {
+    if (!fechaIso) return 'Sin fecha';
+    const parts = String(fechaIso).split('-');
+    if (parts.length !== 3) return fechaIso;
+    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const mIdx = Math.max(0, Math.min(11, parseInt(parts[1], 10) - 1));
+    return `${parts[2]} ${meses[mIdx]} ${parts[0]}`;
+  }
+
+  function getResourceCategoryIcon(cat) {
+    const c = (cat || '').toLowerCase();
+    if (c.includes('3d') || c.includes('stl') || c.includes('fbx') || c.includes('obj')) return '🧊';
+    if (c.includes('bim') || c.includes('rvt') || c.includes('cad')) return '🏗️';
+    if (c.includes('enlace') || c.includes('link') || c.includes('web') || c.includes('repo')) return '🔗';
+    if (c.includes('código') || c.includes('codigo') || c.includes('unity') || c.includes('vr') || c.includes('iot')) return '💻';
+    return '📄';
+  }
+
+  function renderProtoAdvancesPanel(task) {
+    const draft = getAdvanceDraft(task.id);
+    const isFormOpen = Boolean(showAdvanceFormByTask[task.id]) || !(task.imagenes && task.imagenes.length);
+
+    // Ordenar cronológicamente conservando el índice original (origIdx)
+    const indexedImages = (task.imagenes || []).map((img, idx) => ({
+      ...img,
+      origIdx: idx,
+      fecha: img.fecha || task.fechaInicio || '2026-11-10',
+      descripcion: img.descripcion || `Registro visual de avance en la etapa ${task.id}.`,
+      autor: img.autor || task.responsable || 'Equipo SENNOVA CTM'
+    }));
+
+    indexedImages.sort((a, b) => {
+      const cmp = String(a.fecha).localeCompare(String(b.fecha));
+      if (cmp !== 0) return protoChronoOrder === 'asc' ? cmp : -cmp;
+      return protoChronoOrder === 'asc' ? (a.origIdx - b.origIdx) : (b.origIdx - a.origIdx);
+    });
+
+    return `
+      <div class="proto-section-panel">
+        <div class="proto-section-header">
+          <div>
+            <span class="panel-kicker" style="margin-bottom:2px;">PANEL 01 · BITÁCORA VISUAL CRONOLÓGICA DE LA ETAPA (${task.id})</span>
+            <h3 style="font-size:16px; font-weight:900; color:var(--text-primary); text-transform:uppercase; letter-spacing:-0.01em;">
+              🖼️ Registro de Avances con Imagen, Título y Texto Descriptivo (${indexedImages.length})
+            </h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+              Cada imagen subida se guarda con su <strong>título</strong>, <strong>texto descriptivo del avance</strong> y <strong>fecha de publicación</strong>, ordenándose cronológicamente como una Card expandible a pantalla completa.
+            </p>
+          </div>
+          <div class="no-print" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn btn-secondary" style="padding:7px 11px; font-size:10.5px;" onclick="toggleProtoChronoOrder()">
+              📅 Orden Cronológico: ${protoChronoOrder === 'asc' ? '1º → Último (Ascendente ↑)' : 'Más Recientes Primero (Descendente ↓)'}
+            </button>
+            <button type="button" class="btn ${isFormOpen ? 'btn-wood' : 'btn-primary'}" style="padding:7px 13px; font-size:11px;" onclick="toggleAdvanceForm('${task.id}')">
+              ${isFormOpen ? '▲ Ocultar Panel de Subida' : '➕ Subir Imagen de Avance'}
+            </button>
+          </div>
+        </div>
+
+        ${isFormOpen ? `
+          <div class="proto-form-drawer no-print">
+            <div class="proto-form-drawer-header">
+              <span style="font-size:11.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-terracotta-dark);">
+                📷 Nuevo Registro de Avance Visual (${task.id} · ${task.titulo})
+              </span>
+              <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">
+                Paso 1: Selecciona imagen · Paso 2: Título, Fecha y Descripción · Paso 3: Publicar Card
+              </span>
+            </div>
+
+            <!-- Selección de archivo de imagen o URL -->
+            <div class="image-upload-zone">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <label class="btn btn-primary" style="cursor:pointer; padding:8px 14px;">
+                  📷 Seleccionar Imagen desde PC
+                  <input type="file" accept="image/*" style="display:none;" onchange="handleSelectAdvanceImageFile('${task.id}', this)" />
+                </label>
+                <span style="font-size:11.5px; color:var(--text-secondary);">
+                  ${draft.fileName ? `✅ Archivo cargado: <strong>${draft.fileName}</strong>` : 'Sube una foto del prototipo 3D, corte CNC, ensamble o captura de Unity VR'}
+                </span>
+              </div>
+              <div style="flex:1; min-width:240px;">
+                <input type="text"
+                  class="input-control"
+                  placeholder="O pega aquí una ruta local / URL de imagen (ej. ./assets/img/...)"
+                  value="${(draft.url && !draft.url.startsWith('data:')) ? draft.url.replace(/"/g, '&quot;') : ''}"
+                  oninput="updateAdvanceDraftField('${task.id}', 'url', this.value)" />
+              </div>
+            </div>
+
+            ${draft.url ? `
+              <div class="image-upload-preview" style="margin-bottom:14px;">
+                <img src="${draft.url}" alt="Vista previa" />
+                <div style="flex:1;">
+                  <strong style="font-size:11.5px; color:var(--accent-sage); display:block; text-transform:uppercase;">Vista previa lista para publicar</strong>
+                  <span style="font-size:11px; color:var(--text-secondary);">Completa el título y texto descriptivo abajo y haz clic en "Publicar Avance".</span>
+                </div>
+                <button type="button" class="btn btn-secondary" style="padding:4px 9px; font-size:10px;" onclick="clearAdvanceDraftImage('${task.id}')">
+                  Quitar imagen
+                </button>
+              </div>
+            ` : ''}
+
+            <div class="grid-3" style="margin-bottom:12px;">
+              <div>
+                <label class="field-label">🏷️ Título del Avance Visual *</label>
+                <input type="text"
+                  id="adv-title-${task.id}"
+                  class="input-control"
+                  placeholder="Ej. Impresión 3D preliminar Nodo Hexavalente Escala 1:10"
+                  value="${(draft.titulo || '').replace(/"/g, '&quot;')}"
+                  oninput="updateAdvanceDraftField('${task.id}', 'titulo', this.value)" />
+              </div>
+              <div>
+                <label class="field-label">📅 Fecha de Publicación *</label>
+                <input type="date"
+                  id="adv-date-${task.id}"
+                  class="input-control"
+                  value="${draft.fecha || new Date().toISOString().slice(0, 10)}"
+                  onchange="updateAdvanceDraftField('${task.id}', 'fecha', this.value)" />
+              </div>
+              <div>
+                <label class="field-label">👤 Autor del Registro</label>
+                <select class="select-control" onchange="updateAdvanceDraftField('${task.id}', 'autor', this.value)">
+                  ${['Alex / Sebastián', 'Alex', 'Sebastián', 'Liliana', 'Equipo SENNOVA CTM'].map(au => `
+                    <option value="${au}" ${draft.autor === au ? 'selected' : ''}>${au}</option>
+                  `).join('')}
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label class="field-label">📝 Texto Descriptivo del Avance (Registro Técnico, Observaciones y Resultados) *</label>
+              <textarea rows="3"
+                id="adv-desc-${task.id}"
+                class="textarea-control"
+                placeholder="Describe qué se logró en este avance, parámetros aplicados (ej. tolerancia de 0.25mm en unión 3D, pruebas de carga en madera o ajustes de iluminación en Unity VR)..."
+                oninput="updateAdvanceDraftField('${task.id}', 'descripcion', this.value)">${draft.descripcion || ''}</textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+              <button type="button" class="btn btn-wood" onclick="submitProtoAdvance('${task.id}')">
+                💾 Publicar Avance en Orden Cronológico
+              </button>
+            </div>
+          </div>
+        ` : ''}
+
+        ${indexedImages.length > 0 ? `
+          <div class="advance-cards-grid">
+            ${indexedImages.map((img, chronoPos) => {
+              const numOrder = protoChronoOrder === 'asc'
+                ? String(chronoPos + 1).padStart(2, '0')
+                : String(indexedImages.length - chronoPos).padStart(2, '0');
+              return `
+                <article class="advance-card">
+                  <div>
+                    <div class="advance-card-top-meta">
+                      <span style="color:var(--accent-terracotta-dark);">AVANCE #${numOrder}</span>
+                      <span style="color:var(--text-primary);">📅 Publicado: ${formatFechaPublicacion(img.fecha)} (${img.fecha})</span>
+                    </div>
+                    <div class="advance-card-media" onclick="openProtoLightbox('${task.id}', ${img.origIdx})" title="Haz clic para expandir la imagen a pantalla completa">
+                      <img src="${img.url}" alt="${(img.titulo || 'Avance').replace(/"/g, '&quot;')}" />
+                      <button type="button" class="advance-expand-pill no-print" onclick="event.stopPropagation(); openProtoLightbox('${task.id}', ${img.origIdx})">
+                        ⛶ Pantalla Completa
+                      </button>
+                    </div>
+                    <div class="advance-card-body">
+                      <h4 class="advance-card-title">${img.titulo || 'Avance sin título'}</h4>
+                      <div class="advance-card-desc">${img.descripcion || 'Sin descripción registrada.'}</div>
+                    </div>
+                  </div>
+                  <div class="advance-card-footer">
+                    <span style="font-weight:700; color:var(--accent-slate);">👤 ${img.autor || task.responsable}</span>
+                    <div class="no-print" style="display:flex; align-items:center; gap:6px;">
+                      <button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:10px;" onclick="openProtoLightbox('${task.id}', ${img.origIdx})">
+                        ⛶ Ampliar
+                      </button>
+                      <button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:10px;" onclick="editProtoAdvance('${task.id}', ${img.origIdx})">
+                        ✏️ Editar
+                      </button>
+                      <button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:10px; color:var(--accent-crimson);" onclick="removeProtoImage('${task.id}', ${img.origIdx})">
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div style="background:var(--bg-card); border:1px solid var(--line-hair); padding:18px; text-align:center; color:var(--text-secondary); font-size:12.5px;">
+            Aún no se han publicado cards de avance en esta etapa. Usa el formulario superior para subir una imagen con su título, texto descriptivo y fecha de publicación.
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  function renderProtoResourcesPanel(task) {
+    const rDraft = getResourceDraft(task.id);
+    const isResFormOpen = Boolean(showResourceFormByTask[task.id]);
+    const resources = task.archivos || [];
+
+    return `
+      <div class="proto-section-panel">
+        <div class="proto-section-header">
+          <div>
+            <span class="panel-kicker" style="margin-bottom:2px;">PANEL 02 · REPOSITORIO DE RECURSOS TÉCNICOS DE LA TAREA (${task.id})</span>
+            <h3 style="font-size:16px; font-weight:900; color:var(--text-primary); text-transform:uppercase; letter-spacing:-0.01em;">
+              📦 Panel de Recursos: Enlaces, Modelos 3D (.STL / .FBX / .RVT), Documentos y Código (${resources.length})
+            </h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+              Adjunta enlaces externos (repositorios, Onshape, Google Drive, GrabCAD), archivos de modelos 3D para impresión o BIM, hojas de cálculo, planos PDF y paquetes de Unity VR relacionados a esta tarea.
+            </p>
+          </div>
+          <div class="no-print">
+            <button type="button" class="btn ${isResFormOpen ? 'btn-primary' : 'btn-wood'}" style="padding:7px 14px; font-size:11px;" onclick="toggleResourceForm('${task.id}')">
+              ${isResFormOpen ? '▲ Ocultar Formulario de Recursos' : '➕ Adjuntar Recurso (Enlace / Modelo 3D / Documento)'}
+            </button>
+          </div>
+        </div>
+
+        ${isResFormOpen ? `
+          <div class="proto-form-drawer no-print">
+            <div class="proto-form-drawer-header">
+              <span style="font-size:11.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-sage);">
+                📎 Adjuntar Nuevo Recurso a la Tarea ${task.id}
+              </span>
+              <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">
+                Soporta Enlaces Web, Modelos 3D (.STL, .FBX, .OBJ, .STEP), BIM (.RVT, .IFC), Planos (.PDF, .DWG) y Código
+              </span>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:12px;">
+              <div>
+                <label class="field-label">🗂️ Categoría del Recurso *</label>
+                <select class="select-control" onchange="updateResourceDraftField('${task.id}', 'categoria', this.value)">
+                  ${[
+                    'Modelo 3D (.STL / .FBX / .OBJ / .3MF)',
+                    'Modelo BIM / CAD (.RVT / .IFC / .DWG / .STEP)',
+                    'Enlace Externo / Repositorio Web',
+                    'Documento Técnico / Plano / Cálculo (.PDF / .XLSX / .DOCX)',
+                    'Código / Firmware IoT / Escena Unity VR'
+                  ].map(cat => `
+                    <option value="${cat}" ${rDraft.categoria === cat ? 'selected' : ''}>${cat}</option>
+                  `).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="field-label">🏷️ Nombre o Título del Recurso *</label>
+                <input type="text"
+                  class="input-control"
+                  placeholder="Ej. Nodo_Union_Hexavalente_v3.stl o Carpeta Drive Planos CNC"
+                  value="${(rDraft.nombre || '').replace(/"/g, '&quot;')}"
+                  oninput="updateResourceDraftField('${task.id}', 'nombre', this.value)" />
+              </div>
+              <div>
+                <label class="field-label">📅 Fecha de Publicación</label>
+                <input type="date"
+                  class="input-control"
+                  value="${rDraft.fecha || new Date().toISOString().slice(0, 10)}"
+                  onchange="updateResourceDraftField('${task.id}', 'fecha', this.value)" />
+              </div>
+            </div>
+
+            <div class="image-upload-zone" style="margin-bottom:12px;">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <label class="btn btn-secondary" style="cursor:pointer; padding:7px 12px;">
+                  📎 Seleccionar Archivo desde PC (.STL, .PDF, .FBX, .XLSX...)
+                  <input type="file" style="display:none;" onchange="handleSelectResourceFile('${task.id}', this)" />
+                </label>
+                <span style="font-size:11px; color:var(--text-secondary);">
+                  Formato detectado: <strong>${rDraft.tipo || 'Manual / Enlace'}</strong>
+                </span>
+              </div>
+              <div style="flex:1; min-width:260px;">
+                <input type="text"
+                  class="input-control"
+                  placeholder="🔗 O pega aquí un Enlace / URL (Drive, GitHub, Onshape, GrabCAD, etc.)"
+                  value="${(rDraft.url && !rDraft.url.startsWith('data:')) ? rDraft.url.replace(/"/g, '&quot;') : ''}"
+                  oninput="updateResourceDraftField('${task.id}', 'url', this.value)" />
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label class="field-label">📝 Descripción / Notas Técnicas del Recurso</label>
+              <textarea rows="2"
+                class="textarea-control"
+                placeholder="Describe el contenido del recurso (ej. Modelo 3D validado para impresión en PETG con 4 perímetros, o enlace al repositorio de scripts MQTT para Unity VR)..."
+                oninput="updateResourceDraftField('${task.id}', 'descripcion', this.value)">${rDraft.descripcion || ''}</textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+              <button type="button" class="btn btn-primary" onclick="submitProtoResource('${task.id}')">
+                💾 Guardar Recurso en la Tarea
+              </button>
+            </div>
+          </div>
+        ` : ''}
+
+        ${resources.length > 0 ? `
+          <div class="resources-grid">
+            ${resources.map((arch, fIdx) => {
+              const icon = getResourceCategoryIcon(arch.categoria || arch.tipo);
+              const hasUrl = Boolean(arch.url && arch.url.trim());
+              return `
+                <div class="resource-card">
+                  <div>
+                    <div class="resource-card-head">
+                      <div class="resource-type-icon">${icon}</div>
+                      <div style="flex:1;">
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:3px;">
+                          <span class="badge badge-sena" style="font-size:9.5px; padding:2px 6px;">${arch.categoria || 'Recurso Técnico'}</span>
+                          <span style="font-size:10px; font-weight:700; color:var(--text-muted);">📅 ${arch.fecha || '-'}</span>
+                        </div>
+                        <div class="resource-card-title">${arch.nombre}</div>
+                        <span style="font-size:11px; color:var(--accent-slate); font-weight:600; display:block; margin-top:2px;">
+                          Formato / Tipo: ${arch.tipo || 'Documento / Modelo'}
+                        </span>
+                      </div>
+                    </div>
+                    ${arch.descripcion ? `
+                      <p class="resource-card-desc" style="margin-top:9px;">
+                        ${arch.descripcion}
+                      </p>
+                    ` : ''}
+                  </div>
+                  <div class="resource-card-footer">
+                    <div>
+                      ${hasUrl ? `
+                        <a href="${arch.url}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ${arch.url.startsWith('data:') ? `download="${arch.nombre}"` : ''}
+                          class="btn btn-wood"
+                          style="padding:4px 10px; font-size:10px; text-decoration:none;">
+                          ${arch.url.startsWith('data:') ? '⬇ Descargar Archivo' : '↗ Abrir Recurso / Enlace'}
+                        </a>
+                      ` : `
+                        <span style="font-size:10.5px; color:var(--text-muted); font-weight:600;">📌 Registrado en repositorio local CTM</span>
+                      `}
+                    </div>
+                    <div class="no-print" style="display:flex; gap:6px;">
+                      <button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:10px;" onclick="editProtoResource('${task.id}', ${fIdx})">
+                        ✏️ Editar
+                      </button>
+                      <button type="button" class="btn btn-secondary" style="padding:4px 8px; font-size:10px; color:var(--accent-crimson);" onclick="removeProtoFile('${task.id}', ${fIdx})">
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div style="background:var(--bg-card); border:1px solid var(--line-hair); padding:16px; text-align:center; color:var(--text-secondary); font-size:12px;">
+            No hay recursos adjuntos todavía. Usa <strong>"➕ Adjuntar Recurso"</strong> para vincular enlaces, modelos 3D (<code>.STL</code>, <code>.FBX</code>, <code>.RVT</code>), planos o documentos de esta tarea.
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  function renderProtoLightboxModal() {
+    if (!lightboxState.isOpen) return '';
+
+    let items = [];
+    let contextLabel = '';
+
+    if (Array.isArray(lightboxState.customItems) && lightboxState.customItems.length > 0) {
+      items = lightboxState.customItems;
+      contextLabel = 'REGISTRO VISUAL CONSOLIDADO · FICHA TÉCNICA';
+    } else {
+      const task = protoTasks.find(t => t.id === lightboxState.taskId);
+      if (!task || !Array.isArray(task.imagenes) || task.imagenes.length === 0) return '';
+      items = task.imagenes;
+      contextLabel = `${task.id} · ${task.titulo}`;
+    }
+
+    const safeIdx = Math.max(0, Math.min(items.length - 1, lightboxState.imgIdx || 0));
+    const currentImg = items[safeIdx];
+    if (!currentImg) return '';
+
+    return `
+      <div class="proto-lightbox-overlay no-print" onclick="closeProtoLightbox()">
+        <div class="proto-lightbox-topbar" onclick="event.stopPropagation()">
+          <div>
+            <span style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent-terracotta);">
+              ${contextLabel} · IMAGEN ${safeIdx + 1} DE ${items.length}
+            </span>
+            <div style="font-size:16px; font-weight:900; color:#fff; margin-top:2px;">
+              ${currentImg.titulo || 'Avance Visual de Prototipo'}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge badge-wood" style="font-size:11px;">
+              📅 Publicado: ${formatFechaPublicacion(currentImg.fecha)} (${currentImg.fecha || '-'})
+            </span>
+            ${currentImg.autor ? `<span class="badge badge-sena" style="font-size:11px;">👤 ${currentImg.autor}</span>` : ''}
+            <button type="button" class="btn btn-secondary" style="background:#2A2A27; color:#fff; border-color:#555;" onclick="toggleProtoLightboxZoom()">
+              ${lightboxState.zoomed ? '🗗 Ajustar a Pantalla' : '🔍 Zoom Detalle 125%'}
+            </button>
+            <button type="button" class="btn btn-wood" onclick="closeProtoLightbox()">
+              ✕ Cerrar Pantalla Completa (ESC)
+            </button>
+          </div>
+        </div>
+
+        <div class="proto-lightbox-stage" onclick="closeProtoLightbox()">
+          ${items.length > 1 ? `
+            <button type="button" class="proto-lightbox-nav prev" title="Imagen anterior" onclick="event.stopPropagation(); navigateProtoLightbox(-1)">‹</button>
+          ` : ''}
+          <img src="${currentImg.url}"
+            alt="${(currentImg.titulo || 'Avance').replace(/"/g, '&quot;')}"
+            class="proto-lightbox-img ${lightboxState.zoomed ? 'zoomed' : ''}"
+            onclick="event.stopPropagation(); toggleProtoLightboxZoom()" />
+          ${items.length > 1 ? `
+            <button type="button" class="proto-lightbox-nav next" title="Siguiente imagen" onclick="event.stopPropagation(); navigateProtoLightbox(1)">›</button>
+          ` : ''}
+        </div>
+
+        <div class="proto-lightbox-caption" onclick="event.stopPropagation()">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:6px;">
+            <strong style="font-size:13.5px; color:#fff; text-transform:uppercase; letter-spacing:0.04em;">
+              📝 Descripción Técnica del Avance: ${currentImg.titulo || ''}
+            </strong>
+            <span style="font-size:11px; color:#BDB7AD;">
+              Fecha de publicación: ${currentImg.fecha || '-'} · Haz clic en la imagen para alternar zoom
+            </span>
+          </div>
+          <p style="font-size:13px; color:#E5E0D6; line-height:1.55; white-space:pre-wrap; margin:0;">
+            ${currentImg.descripcion || 'Registro visual de avance del prototipo a escala y Gemelo Digital VR.'}
+          </p>
+        </div>
+      </div>
     `;
   }
 
@@ -1308,9 +1746,19 @@
     const allImages = [];
     const allFiles = [];
     protoTasks.forEach(t => {
-      (t.imagenes || []).forEach(im => allImages.push({ ...im, etapa: t.id }));
+      (t.imagenes || []).forEach((im, idx) => allImages.push({
+        ...im,
+        etapa: t.id,
+        etapaTitulo: t.titulo,
+        origIdx: idx,
+        fecha: im.fecha || t.fechaInicio || '2026-11-10',
+        descripcion: im.descripcion || t.descripcion
+      }));
       (t.archivos || []).forEach(f => allFiles.push({ ...f, etapa: t.id }));
     });
+
+    // Ordenar todas las imágenes cronológicamente para la galería consolidada
+    allImages.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
 
     return `
       <section class="ficha-tecnica-sheet">
@@ -1388,7 +1836,7 @@
                 <th>Componente / Tarea</th>
                 <th>Fechas y Estado</th>
                 <th>Parámetros Técnicos y Documentación de Avance</th>
-                <th>Archivos y Evidencias</th>
+                <th>Recursos y Avances Visuales</th>
               </tr>
             </thead>
             <tbody>
@@ -1418,10 +1866,11 @@
                       <span>${(t.documentacionAvance || 'Sin registro aún').replace(/\n/g, '<br/>')}</span>
                     </div>
                   </td>
-                  <td style="min-width:180px;">
-                    <div><strong style="color:var(--text-primary);">📁 Archivos:</strong> ${(t.archivos || []).length}</div>
-                    ${(t.archivos || []).map(f => `<div style="font-size:11px; color:var(--accent-slate);">• ${f.nombre}</div>`).join('')}
-                    <div style="margin-top:6px;"><strong style="color:var(--text-primary);">🖼️ Imágenes:</strong> ${(t.imagenes || []).length}</div>
+                  <td style="min-width:200px;">
+                    <div><strong style="color:var(--text-primary);">📦 Recursos (${(t.archivos || []).length}):</strong></div>
+                    ${(t.archivos || []).map(f => `<div style="font-size:11px; color:var(--accent-slate);">• [${f.categoria || 'Recurso'}] ${f.nombre}</div>`).join('')}
+                    <div style="margin-top:6px;"><strong style="color:var(--text-primary);">🖼️ Avances Visuales (${(t.imagenes || []).length}):</strong></div>
+                    ${(t.imagenes || []).map(im => `<div style="font-size:11px; color:var(--text-secondary);">• [${im.fecha || '-'}] ${im.titulo}</div>`).join('')}
                   </td>
                 </tr>
               `).join('')}
@@ -1429,18 +1878,30 @@
           </table>
         </div>
 
-        <!-- Galería Visual Consolidada de la Ficha Técnica -->
-        <h3 style="font-size:13.5px; font-weight:900; color:var(--accent-slate); text-transform:uppercase; letter-spacing:0.08em; margin:22px 0 10px 0;">
-          03 · Registro Visual Consolidado del Desarrollo (${allImages.length} Imágenes)
+        <!-- Galería Visual Consolidada de la Ficha Técnica (Cards Cronológicas) -->
+        <h3 style="font-size:13.5px; font-weight:900; color:var(--accent-slate); text-transform:uppercase; letter-spacing:0.08em; margin:24px 0 12px 0;">
+          03 · Línea de Tiempo Visual Consolidada del Desarrollo (${allImages.length} Avances Registrados)
         </h3>
-        <div class="media-gallery">
-          ${allImages.map(im => `
-            <div class="media-thumb">
-              <img src="${im.url}" alt="${im.titulo}" />
-              <div class="media-thumb-caption">
-                <span><strong>${im.etapa}:</strong> ${im.titulo}</span>
+        <div class="advance-cards-grid">
+          ${allImages.map((im, idx) => `
+            <article class="advance-card">
+              <div>
+                <div class="advance-card-top-meta">
+                  <span style="color:var(--accent-terracotta-dark);">${im.etapa} · AVANCE #${String(idx + 1).padStart(2, '0')}</span>
+                  <span>📅 ${formatFechaPublicacion(im.fecha)}</span>
+                </div>
+                <div class="advance-card-media" onclick="openProtoLightbox('${im.etapa}', ${im.origIdx})">
+                  <img src="${im.url}" alt="${im.titulo}" />
+                  <button type="button" class="advance-expand-pill no-print" onclick="event.stopPropagation(); openProtoLightbox('${im.etapa}', ${im.origIdx})">
+                    ⛶ Pantalla Completa
+                  </button>
+                </div>
+                <div class="advance-card-body">
+                  <h4 class="advance-card-title">${im.titulo}</h4>
+                  <div class="advance-card-desc">${im.descripcion || ''}</div>
+                </div>
               </div>
-            </div>
+            </article>
           `).join('')}
         </div>
       </section>
@@ -1457,6 +1918,248 @@
 
   window.selectProtoTask = function (taskId) {
     activeProtoTaskId = taskId;
+    render();
+  };
+
+  window.toggleProtoChronoOrder = function () {
+    protoChronoOrder = protoChronoOrder === 'asc' ? 'desc' : 'asc';
+    render();
+  };
+
+  window.toggleAdvanceForm = function (taskId) {
+    showAdvanceFormByTask[taskId] = !showAdvanceFormByTask[taskId];
+    render();
+  };
+
+  window.toggleResourceForm = function (taskId) {
+    showResourceFormByTask[taskId] = !showResourceFormByTask[taskId];
+    render();
+  };
+
+  window.updateAdvanceDraftField = function (taskId, field, value) {
+    const draft = getAdvanceDraft(taskId);
+    draft[field] = value;
+  };
+
+  window.clearAdvanceDraftImage = function (taskId) {
+    const draft = getAdvanceDraft(taskId);
+    draft.url = '';
+    draft.fileName = '';
+    render();
+  };
+
+  window.handleSelectAdvanceImageFile = function (taskId, inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const draft = getAdvanceDraft(taskId);
+    draft.fileName = file.name;
+    if (!draft.titulo || !draft.titulo.trim()) {
+      draft.titulo = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]+/g, ' ');
+    }
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      draft.url = e.target.result;
+      showAdvanceFormByTask[taskId] = true;
+      render();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.submitProtoAdvance = function (taskId) {
+    const task = protoTasks.find(t => t.id === taskId);
+    if (!task) return;
+    const draft = getAdvanceDraft(taskId);
+
+    if (!draft.url || !draft.url.trim()) {
+      alert('Por favor selecciona una imagen desde tu PC o ingresa la ruta/URL de la imagen del avance.');
+      return;
+    }
+    if (!draft.titulo || !draft.titulo.trim()) {
+      alert('Por favor escribe un título para identificar este avance visual.');
+      return;
+    }
+
+    if (!Array.isArray(task.imagenes)) task.imagenes = [];
+    task.imagenes.push({
+      titulo: draft.titulo.trim(),
+      descripcion: (draft.descripcion && draft.descripcion.trim())
+        ? draft.descripcion.trim()
+        : `Avance registrado en la etapa ${task.id} (${task.titulo}).`,
+      fecha: draft.fecha || new Date().toISOString().slice(0, 10),
+      autor: draft.autor || task.responsable || 'Alex / Sebastián',
+      url: draft.url.trim()
+    });
+
+    // Reiniciar borrador de este formulario
+    advanceDraftByTask[taskId] = {
+      titulo: '',
+      descripcion: '',
+      fecha: new Date().toISOString().slice(0, 10),
+      autor: draft.autor || 'Alex / Sebastián',
+      url: '',
+      fileName: ''
+    };
+
+    saveProtoTasks();
+    render();
+  };
+
+  window.editProtoAdvance = function (taskId, imgIdx) {
+    const task = protoTasks.find(t => t.id === taskId);
+    if (!task || !task.imagenes || !task.imagenes[imgIdx]) return;
+    const item = task.imagenes[imgIdx];
+
+    const nuevoTitulo = prompt('Editar título del avance:', item.titulo || '');
+    if (nuevoTitulo === null) return;
+    const nuevaFecha = prompt('Editar fecha de publicación (YYYY-MM-DD):', item.fecha || new Date().toISOString().slice(0, 10));
+    if (nuevaFecha === null) return;
+    const nuevaDesc = prompt('Editar texto descriptivo del avance:', item.descripcion || '');
+    if (nuevaDesc === null) return;
+
+    item.titulo = nuevoTitulo.trim() || item.titulo;
+    item.fecha = nuevaFecha.trim() || item.fecha;
+    item.descripcion = nuevaDesc.trim();
+    saveProtoTasks();
+    render();
+  };
+
+  window.removeProtoImage = function (taskId, imgIdx) {
+    if (!confirm('¿Deseas eliminar esta card de avance visual?')) return;
+    const task = protoTasks.find(t => t.id === taskId);
+    if (task && task.imagenes) {
+      task.imagenes.splice(imgIdx, 1);
+      saveProtoTasks();
+      render();
+    }
+  };
+
+  // Visor a Pantalla Completa (Lightbox)
+  window.openProtoLightbox = function (taskId, imgIdx) {
+    lightboxState = {
+      isOpen: true,
+      taskId: taskId,
+      imgIdx: Number(imgIdx) || 0,
+      zoomed: false,
+      customItems: null
+    };
+    render();
+  };
+
+  window.closeProtoLightbox = function () {
+    if (!lightboxState.isOpen) return;
+    lightboxState.isOpen = false;
+    lightboxState.zoomed = false;
+    render();
+  };
+
+  window.toggleProtoLightboxZoom = function () {
+    if (!lightboxState.isOpen) return;
+    lightboxState.zoomed = !lightboxState.zoomed;
+    render();
+  };
+
+  window.navigateProtoLightbox = function (delta) {
+    if (!lightboxState.isOpen) return;
+    const task = protoTasks.find(t => t.id === lightboxState.taskId);
+    const list = (task && task.imagenes) ? task.imagenes : [];
+    if (list.length <= 1) return;
+    lightboxState.imgIdx = (lightboxState.imgIdx + delta + list.length) % list.length;
+    lightboxState.zoomed = false;
+    render();
+  };
+
+  // Gestión del Panel de Recursos de la Tarea
+  window.updateResourceDraftField = function (taskId, field, value) {
+    const rDraft = getResourceDraft(taskId);
+    rDraft[field] = value;
+  };
+
+  window.handleSelectResourceFile = function (taskId, inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const rDraft = getResourceDraft(taskId);
+    const ext = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'ARCHIVO';
+    const sizeKB = Math.max(1, Math.round(file.size / 1024));
+
+    rDraft.nombre = rDraft.nombre && rDraft.nombre.trim() ? rDraft.nombre : file.name;
+    rDraft.tipo = `Archivo .${ext} (${sizeKB} KB)`;
+
+    if (['STL', 'FBX', 'OBJ', '3MF', 'STEP', 'IGES', 'GLTF', 'GLB'].includes(ext)) {
+      rDraft.categoria = 'Modelo 3D (.STL / .FBX / .OBJ / .3MF)';
+    } else if (['RVT', 'IFC', 'DWG', 'DXF'].includes(ext)) {
+      rDraft.categoria = 'Modelo BIM / CAD (.RVT / .IFC / .DWG / .STEP)';
+    } else if (['INO', 'YAML', 'CS', 'JSON', 'GCODE', 'NC', 'UNITYPACKAGE'].includes(ext)) {
+      rDraft.categoria = 'Código / Firmware IoT / Escena Unity VR';
+    } else {
+      rDraft.categoria = 'Documento Técnico / Plano / Cálculo (.PDF / .XLSX / .DOCX)';
+    }
+
+    // Si el archivo pesa menos de 2 MB lo guardamos como DataURL descargable
+    if (file.size <= 2 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        rDraft.url = e.target.result;
+        showResourceFormByTask[taskId] = true;
+        render();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      showResourceFormByTask[taskId] = true;
+      render();
+    }
+  };
+
+  window.submitProtoResource = function (taskId) {
+    const task = protoTasks.find(t => t.id === taskId);
+    if (!task) return;
+    const rDraft = getResourceDraft(taskId);
+
+    if (!rDraft.nombre || !rDraft.nombre.trim()) {
+      alert('Por favor ingresa el nombre del recurso, modelo 3D, documento o enlace.');
+      return;
+    }
+
+    if (!Array.isArray(task.archivos)) task.archivos = [];
+    task.archivos.push({
+      nombre: rDraft.nombre.trim(),
+      categoria: rDraft.categoria || 'Recurso Técnico',
+      tipo: rDraft.tipo || (rDraft.url ? 'Enlace / Recurso Web' : 'Recurso Técnico'),
+      url: (rDraft.url || '').trim(),
+      descripcion: (rDraft.descripcion || '').trim() || `Recurso técnico vinculado a la tarea ${task.id}.`,
+      fecha: rDraft.fecha || new Date().toISOString().slice(0, 10)
+    });
+
+    resourceDraftByTask[taskId] = {
+      nombre: '',
+      categoria: rDraft.categoria,
+      tipo: 'Modelo 3D / CAD',
+      url: '',
+      descripcion: '',
+      fecha: new Date().toISOString().slice(0, 10)
+    };
+
+    saveProtoTasks();
+    render();
+  };
+
+  window.editProtoResource = function (taskId, fileIdx) {
+    const task = protoTasks.find(t => t.id === taskId);
+    if (!task || !task.archivos || !task.archivos[fileIdx]) return;
+    const arch = task.archivos[fileIdx];
+
+    const nuevoNombre = prompt('Editar nombre o título del recurso:', arch.nombre || '');
+    if (nuevoNombre === null) return;
+    const nuevaUrl = prompt('Editar enlace / URL del recurso (opcional):', (arch.url && !arch.url.startsWith('data:')) ? arch.url : '');
+    if (nuevaUrl === null) return;
+    const nuevaDesc = prompt('Editar descripción del recurso:', arch.descripcion || '');
+    if (nuevaDesc === null) return;
+
+    arch.nombre = nuevoNombre.trim() || arch.nombre;
+    if (!arch.url || !arch.url.startsWith('data:') || nuevaUrl.trim()) {
+      arch.url = nuevaUrl.trim();
+    }
+    arch.descripcion = nuevaDesc.trim();
+    saveProtoTasks();
     render();
   };
 
@@ -1482,84 +2185,8 @@
     saveFichaMeta();
   };
 
-  window.handleUploadProtoImage = function (taskId, inputEl) {
-    const file = inputEl.files && inputEl.files[0];
-    if (!file) return;
-    const titulo = prompt('Título o descripción de esta imagen / avance:', file.name.replace(/\.[^/.]+$/, '')) || file.name;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const task = protoTasks.find(t => t.id === taskId);
-      if (task) {
-        if (!Array.isArray(task.imagenes)) task.imagenes = [];
-        task.imagenes.push({
-          titulo: titulo,
-          url: e.target.result
-        });
-        saveProtoTasks();
-        render();
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  window.addProtoImageByUrl = function (taskId) {
-    const url = prompt('Ingresa la ruta local (ej. ./assets/img/lamina_domo_referencia.jpg) o URL de la imagen:');
-    if (!url || !url.trim()) return;
-    const titulo = prompt('Título o descripción de la imagen:', 'Avance de prototipo') || 'Avance';
-    const task = protoTasks.find(t => t.id === taskId);
-    if (task) {
-      if (!Array.isArray(task.imagenes)) task.imagenes = [];
-      task.imagenes.push({ titulo: titulo.trim(), url: url.trim() });
-      saveProtoTasks();
-      render();
-    }
-  };
-
-  window.removeProtoImage = function (taskId, imgIdx) {
-    const task = protoTasks.find(t => t.id === taskId);
-    if (task && task.imagenes) {
-      task.imagenes.splice(imgIdx, 1);
-      saveProtoTasks();
-      render();
-    }
-  };
-
-  window.handleSelectProtoFile = function (taskId, inputEl) {
-    const file = inputEl.files && inputEl.files[0];
-    if (!file) return;
-    const ext = file.name.split('.').pop().toUpperCase();
-    const tipo = prompt('Categoría o tipo de archivo (ej. Impresión 3D STL, Modelo BIM, Proyecto Unity, Plano PDF):', `Archivo .${ext}`) || `Archivo .${ext}`;
-    const task = protoTasks.find(t => t.id === taskId);
-    if (task) {
-      if (!Array.isArray(task.archivos)) task.archivos = [];
-      task.archivos.push({
-        nombre: file.name,
-        tipo: `${tipo} (${Math.round(file.size / 1024)} KB)`,
-        fecha: new Date().toISOString().slice(0, 10)
-      });
-      saveProtoTasks();
-      render();
-    }
-  };
-
-  window.addProtoFileManual = function (taskId) {
-    const nombre = prompt('Nombre del archivo, diseño o enlace al repositorio (ej. Nodo_Geodesico_v3.stl):');
-    if (!nombre || !nombre.trim()) return;
-    const tipo = prompt('Tipo (ej. STL Impresión 3D / Modelo BIM / G-Code CNC / Escena Unity VR):', 'Diseño Técnico') || 'Diseño Técnico';
-    const task = protoTasks.find(t => t.id === taskId);
-    if (task) {
-      if (!Array.isArray(task.archivos)) task.archivos = [];
-      task.archivos.push({
-        nombre: nombre.trim(),
-        tipo: tipo.trim(),
-        fecha: new Date().toISOString().slice(0, 10)
-      });
-      saveProtoTasks();
-      render();
-    }
-  };
-
   window.removeProtoFile = function (taskId, fileIdx) {
+    if (!confirm('¿Deseas eliminar este recurso de la tarea?')) return;
     const task = protoTasks.find(t => t.id === taskId);
     if (task && task.archivos) {
       task.archivos.splice(fileIdx, 1);
@@ -1592,6 +2219,7 @@
     });
     saveProtoTasks();
     activeProtoTaskId = newId;
+    showAdvanceFormByTask[newId] = true;
     render();
   };
 
@@ -2366,6 +2994,18 @@
       });
     }
   }
+
+  // Atajos de teclado para el visor de imágenes a pantalla completa (Lightbox)
+  window.addEventListener('keydown', e => {
+    if (!lightboxState || !lightboxState.isOpen) return;
+    if (e.key === 'Escape') {
+      window.closeProtoLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      window.navigateProtoLightbox(-1);
+    } else if (e.key === 'ArrowRight') {
+      window.navigateProtoLightbox(1);
+    }
+  });
 
   // Inicializar
   if (document.readyState === 'loading') {
