@@ -1343,7 +1343,7 @@
           <div>
             <span class="panel-kicker" style="margin-bottom:2px;">PANEL 01 · BITÁCORA VISUAL CRONOLÓGICA DE LA ETAPA (${task.id})</span>
             <h3 style="font-size:16px; font-weight:900; color:var(--text-primary); text-transform:uppercase; letter-spacing:-0.01em;">
-              🖼️ Registro de Avances con Imagen, Título y Texto Descriptivo (${indexedImages.length})
+              🖼️ Registrar Avance (${indexedImages.length})
             </h3>
             <p style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
               Cada imagen subida se guarda con su <strong>título</strong>, <strong>texto descriptivo del avance</strong> y <strong>fecha de publicación</strong>, ordenándose cronológicamente como una Card expandible a pantalla completa.
@@ -1354,7 +1354,7 @@
               📅 Orden Cronológico: ${protoChronoOrder === 'asc' ? '1º → Último (Ascendente ↑)' : 'Más Recientes Primero (Descendente ↓)'}
             </button>
             <button type="button" class="btn ${isFormOpen ? 'btn-wood' : 'btn-primary'}" style="padding:7px 13px; font-size:11px;" onclick="toggleAdvanceForm('${task.id}')">
-              ${isFormOpen ? '▲ Ocultar Panel de Subida' : '➕ Subir Imagen de Avance'}
+              ${isFormOpen ? '▲ Ocultar Panel de Subida' : '➕ Registrar Avance'}
             </button>
           </div>
         </div>
@@ -1363,7 +1363,7 @@
           <div class="proto-form-drawer no-print">
             <div class="proto-form-drawer-header">
               <span style="font-size:11.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-terracotta-dark);">
-                📷 Nuevo Registro de Avance Visual (${task.id} · ${task.titulo})
+                📷 Registrar Avance (${task.id} · ${task.titulo})
               </span>
               <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">
                 Paso 1: Selecciona imagen · Paso 2: Título, Fecha y Descripción · Paso 3: Publicar Card
