@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presentación Comité Pedagógico (20 min) | Geodome Smart - CTM SENA</title>
+  <style>
+    :root {
+      /* Paleta Oficial Plantilla Comité Pedagógico CTM + SENA + Estudio Madera */
+      --ctm-navy: #0F4475;
+      --ctm-navy-dark: #0E2A47;
+      --ctm-steel: #435D74;
+      --ctm-burgundy: #550000;
+      --sena-green: #39A900;
+      --sena-green-soft: rgba(57, 169, 0, 0.12);
+      --wood-terracotta: #C86D44;
+      --wood-ochre: #B8863B;
+      --wood-warm: #F5F2EB;
+      --bg-slide: #FFFFFF;
+      --bg-subtle: #F4F6F9;
+      --text-dark: #14181F;
+      --text-body: #2D3748;
+      --text-muted: #64748B;
+      --line-border: #DCE3EC;
+      --shadow-card: 0 10px 30px rgba(14, 42, 71, 0.08);
+      --shadow-elevated: 0 20px 50px rgba(14, 42, 71, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--ctm-navy-dark);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       CONTENEDOR PRINCIPAL DE DIAPOSITIVAS Y TRANSICIONES ANIMADAS
+       ========================================================================== */
+    .deck-viewport {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 54px);
+      overflow: hidden;
+      background: #0B1F35;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-slide);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(48px) scale(0.985);
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.55s;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0) scale(1);
+      z-index: 5;
+    }
+
+    .slide.prev-slide {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-48px) scale(0.985);
+    }
+
+    /* Animaciones escalonadas de entrada para los elementos internos */
+    .slide .anim-item {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide.active .anim-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active .delay-1 { transition-delay: 0.08s; }
+    .slide.active .delay-2 { transition-delay: 0.16s; }
+    .slide.active .delay-3 { transition-delay: 0.24s; }
+    .slide.active .delay-4 { transition-delay: 0.32s; }
+    .slide.active .delay-5 { transition-delay: 0.40s; }
+
+    /* ==========================================================================
+       CABECERA INSTITUCIONAL DE PLANTILLA COMITÉ PEDAGÓGICO (SLIDES 3 A 9)
+       ========================================================================== */
+    .template-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 42px 12px 42px;
+      border-bottom: 2px solid var(--line-border);
+      background: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .template-header-left {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .template-kicker-block {
+      padding-right: 20px;
+      border-right: 2px solid var(--ctm-navy);
+    }
+
+    .template-kicker-sup {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ctm-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+    }
+
+    .template-project-short {
+      font-size: 16px;
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: -0.01em;
+    }
+
+    .template-section-heading {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--ctm-navy);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .template-section-subpill {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--sena-green-soft);
+      color: #257000;
+      border: 1px solid rgba(57, 169, 0, 0.3);
+    }
+
+    .template-logos-strip {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .template-logos-strip img.logo-ctm-main {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .template-logos-strip img.logo-matermob {
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .template-logos-strip img.logo-sennova {
+      height: 34px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Cuerpo de diapositiva estándar */
+    .slide-body {
+      flex: 1;
+      padding: 24px 42px 28px 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      max-width: 1680px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       SLIDE 1: PORTADA OFICIAL PLANTILLA COMITÉ PEDAGÓGICO
+       ========================================================================== */
+    .cover-layout {
+      display: grid;
+      grid-template-columns: 42% 58%;
+      height: 100%;
+      width: 100%;
+      background: #FFFFFF;
+    }
+
+    .cover-left-photo {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      background: #14181F;
+    }
+
+    .cover-left-photo img.main-wood-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.04);
+    }
+
+    .cover-photo-overlay-card {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(14, 42, 71, 0.92);
+      backdrop-filter: blur(8px);
+      border-left: 5px solid var(--sena-green);
+      padding: 16px 18px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .cover-photo-overlay-card img {
+      width: 92px;
+      height: 70px;
+      object-fit: contain;
+      background: #FFFFFF;
+      padding: 4px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .cover-right-panel {
+      padding: 42px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #FFFFFF;
+      position: relative;
+    }
+
+    .cover-top-logos {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line-border);
+      padding-bottom: 18px;
+    }
+
+    .cover-top-logos img.ctm-lockup {
+      height: 74px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .cover-research-logos {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .cover-research-logos img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .cover- institutional-title {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--ctm-navy);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .cover-committee-sub {
+      font-size: 22px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cover-project-box {
+      background: var(--bg-subtle);
+      border-left: 6px solid var(--ctm-navy);
+      border-top: 1px solid var(--line-border);
+      border-right: 1px solid var(--line-border);
+      border-bottom: 1px solid var(--line-border);
+      padding: 22px 26px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .cover-project-kicker {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--sena-green);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .cover-project-name {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text-dark);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .cover-project-meta {
+      font-size: 13.5px;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       SLIDE 2: CONTENIDO (ESTRUCTURA PLANTILLA 01, 02, 03)
+       ========================================================================== */
+    .contenido-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .contenido-col {
+      background: #FFFFFF;
+      border: 1px solid var(--line-border);
+      border-top: 6px solid var(--ctm-navy);
+      padding: 26px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      cursor: pointer;
+    }
+
+    .contenido-col:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .contenido-col.col-02 {
+      border-top-color: var(--ctm-burgundy);
+    }
+
+    .contenido-col.col-03 {
+      border-top-color: var(--sena-green);
+    }
+
+    .contenido-num-badge {
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--ctm-navy);
+      line-height: 1;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .contenido-col.col-02 .contenido-num-badge { color: var(--ctm-burgundy); }
+    .contenido-col.col-03 .contenido-num-badge { color: var(--sena-green); }
+
+    .contenido-title {
+      font-size: 21px;
+      font-weight: 900;
+      color: #000000;
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .contenido-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--text-body);
+    }
+
+    .contenido-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       COMPONENTES VISUALES REUTILIZABLES DE LAS DIAPOSITIVAS
+       ========================================================================== */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .grid-2-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .card-box {
+      background: #FFFFFF;
+      border: 1px solid var(--line-border);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-box.navy-accent { border-left: 5px solid var(--ctm-navy); }
+    .card-box.green-accent { border-left: 5px solid var(--sena-green); }
+    .card-box.wood-accent { border-left: 5px solid var(--wood-terracotta); }
+    .card-box.burgundy-accent { border-left: 5px solid var(--ctm-burgundy); }
+
+    .card-kicker {
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ctm-navy);
+    }
+
+    .card-title {
+      font-size: 16.5px;
+      font-weight: 900;
+      color: var(--text-dark);
+      line-height: 1.28;
+    }
+
+    .card-text {
+      font-size: 13.2px;
+      color: var(--text-body);
+      line-height: 1.52;
+    }
+
+    .img-showcase-card {
+      background: var(--wood-warm);
+      border: 1px solid var(--line-border);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-card);
+      cursor: zoom-in;
+      transition: border-color 0.2s ease;
+    }
+
+    .img-showcase-card:hover {
+      border-color: var(--ctm-navy);
+    }
+
+    .img-showcase-card img {
+      width: 100%;
+      height: 235px;
+      object-fit: contain;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .img-showcase-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--ctm-navy-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Diagrama de flujo de procesos */
+    .process-flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .flow-step {
+      background: var(--bg-subtle);
+      border: 1px solid var(--line-border);
+      border-top: 4px solid var(--ctm-navy);
+      padding: 14px 16px;
+      position: relative;
+    }
+
+    .flow-step-num {
+      display: inline-block;
+      background: var(--ctm-navy);
+      color: #FFFFFF;
+      font-size: 10.5px;
+      font-weight: 900;
+      padding: 2px 8px;
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+    }
+
+    /* Tabla de Cronograma y Etapas hacia INTERZUM */
+    .pres-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #FFFFFF;
+      box-shadow: var(--shadow-card);
+    }
+
+    .pres-table th {
+      background: var(--ctm-navy);
+      color: #FFFFFF;
+      text-align: left;
+      padding: 9px 12px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pres-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line-border);
+      color: var(--text-body);
+      vertical-align: middle;
+    }
+
+    .pres-table tr:nth-child(even) td {
+      background: var(--bg-subtle);
+    }
+
+    .pill-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 3px;
+    }
+
+    .pill-navy { background: rgba(15, 68, 117, 0.12); color: var(--ctm-navy); }
+    .pill-green { background: rgba(57, 169, 0, 0.14); color: #206300; }
+    .pill-wood { background: rgba(200, 109, 68, 0.15); color: #9E4720; }
+
+    /* ==========================================================================
+       SLIDE 10: CIERRE OFICIAL ("GRACIAS" - FONDO #0E2A47 DE LA PLANTILLA)
+       ========================================================================== */
+    .thanks-slide-wrap {
+      width: 100%;
+      height: 100%;
+      background: var(--ctm-navy-dark);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       BARRA DE CONTROL INFERIOR + TEMPORIZADOR 20 MIN + TELEPROMPTER
+       ========================================================================== */
+    .deck-controlbar {
+      height: 54px;
+      background: #091B2E;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      color: #FFFFFF;
+      z-index: 50;
+      user-select: none;
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 13px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .ctrl-btn:hover {
+      background: var(--sena-green);
+      border-color: var(--sena-green);
+      color: #FFFFFF;
+    }
+
+    .ctrl-btn.active-toggle {
+      background: var(--wood-terracotta);
+      border-color: var(--wood-terracotta);
+    }
+
+    .slide-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slide-dot {
+      width: 26px;
+      height: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.06);
+      color: #CBD5E1;
+      font-size: 10.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .slide-dot.active {
+      background: var(--sena-green);
+      border-color: var(--sena-green);
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+
+    /* Panel de Guion de Exposición (20 minutos) */
+    .speaker-notes-drawer {
+      position: fixed;
+      left: 24px;
+      right: 24px;
+      bottom: 66px;
+      background: rgba(14, 42, 71, 0.96);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-left: 5px solid var(--sena-green);
+      color: #FFFFFF;
+      padding: 14px 20px;
+      z-index: 60;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      display: none;
+    }
+
+    .speaker-notes-drawer.open {
+      display: block;
+    }
+
+    /* Visor Lightbox para ampliar planos e imágenes en plena presentación */
+    .pres-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 27, 46, 0.94);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .pres-lightbox.open {
+      display: flex;
+    }
+
+    .pres-lightbox img {
+      max-width: 92vw;
+      max-height: 82vh;
+      object-fit: contain;
+      background: #FFFFFF;
+      padding: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+    }
+
+    @media (max-width: 1180px) {
+      .cover-layout, .contenido-grid, .grid-2, .grid-2-equal, .grid-3, .grid-4, .process-flow {
+        grid-template-columns: 1fr;
+      }
+      .template-topbar {
+        padding: 12px 20px;
+      }
+      .slide-body {
+        padding: 16px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-viewport" id="deck-viewport">
+
+    <!-- ======================================================================
+         SLIDE 1: PORTADA OFICIAL PLANTILLA COMITÉ PEDAGÓGICO (NOV 2026)
+         ====================================================================== -->
+    <section class="slide active" data-slide-index="0" data-time="Min 0:00 - 1:30 (1.5 min)" data-notes="Saludo al Comité Pedagógico del Centro Tecnológico del Mobiliario (Noviembre 2026). Presentamos el proyecto de investigación aplicada Geodome Smart, articulado entre la línea medular de la madera, ebanistería, carpintería, fabricación digital (CNC + Impresión 3D) y domótica abierta en el Medialab rumbo a INTERZUM Bogotá 2028.">
+      <div class="cover-layout">
+        <!-- Columna Izquierda: Imagen oficial de carpintería de la plantilla + Tarjeta del prototipo -->
+        <div class="cover-left-photo">
+          <img src="./assets/img/presentacion/image4.jpg" alt="Trabajo en Madera CTM" class="main-wood-photo" />
+          <div class="cover-photo-overlay-card anim-item delay-2" onclick="openPresLightbox('./assets/img/domo_isometrico_hero.png', 'Vista Isométrica General del Prototipo Geodome Smart')" style="cursor:zoom-in;">
+            <img src="./assets/img/domo_isometrico_hero.png" alt="Prototipo Geodome Smart" />
+            <div>
+              <span style="font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:#68D391; display:block;">
+                META DE EXHIBICIÓN · INTERZUM BOGOTÁ (MAYO 2028)
+              </span>
+              <strong style="font-size:14px; display:block; margin:2px 0;">
+                Estructura en Madera + Uniones y Utillajes 3D + Domótica IoT + Gemelo VR
+              </strong>
+              <span style="font-size:11.5px; color:#CBD5E1;">
+                Haz clic en cualquier plano o imagen durante la presentación para ampliar a pantalla completa.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Identidad Institucional SENA CTM + Matermob + SENNOVA -->
+        <div class="cover-right-panel">
+          <div class="cover-top-logos anim-item delay-1">
+            <img src="./assets/img/presentacion/image5.jpg" alt="SENA Centro Tecnológico del Mobiliario Regional Antioquia" class="ctm-lockup" />
+            <div class="cover-research-logos">
+              <img src="./assets/img/presentacion/image1.png" alt="Grupo de Investigación Matermob" />
+              <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" />
+            </div>
+          </div>
+
+          <div class="anim-item delay-2">
+            <h1 class="cover-institutional-title" style="font-size:38px; font-weight:900; color:var(--ctm-navy); line-height:1.12; margin-bottom:10px;">
+              Competitividad &amp; Desarrollo Tecnológico Productivo
+            </h1>
+            <div class="cover-committee-sub">
+              <span>Comité Pedagógico</span>
+              <span style="color:var(--ctm-navy);">|</span>
+              <span style="color:var(--sena-green); font-weight:900;">Nov 2026</span>
+              <span class="pill-badge pill-navy" style="font-size:11px;">Exposición Ejecutiva · 20 Minutos</span>
+            </div>
+
+            <div class="cover-project-box">
+              <span class="cover-project-kicker">PROYECTO FORMULADO EN PLATAFORMA MGA SENNOVA (SINCRONIZADO WEB RAILWAY)</span>
+              <h2 class="cover-project-name" id="pres-project-name">
+                Geodome Smart: Alojamiento Ecoturístico Inteligente con Gemelo Digital Integrado
+              </h2>
+              <p class="cover-project-meta" id="pres-project-summary">
+                Articulación de la <strong>línea medular de la madera</strong> (Carpintería, Ebanistería y Mobiliario) con flujos <strong>BIM</strong>, manufactura híbrida (<strong>Maquinaria Convencional + Dispositivos Impresos en 3D + CNC</strong>), <strong>Domótica Abierta (IoT)</strong> y <strong>Gemelo Digital en Unity VR</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="anim-item delay-3" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top:16px; border-top:1px solid var(--line-border); font-size:12.5px; color:var(--text-muted);">
+            <div>
+              <strong style="color:var(--text-dark);">Equipo Formulador e Investigadores CTM:</strong> Alex Zapata · Sebastián · Liliana · Equipo Medialab &amp; Talleres de Madera
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="ctrl-btn" style="background:var(--ctm-navy); border-color:var(--ctm-navy);" onclick="goToSlide(1)">
+                Iniciar Presentación →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 2: CONTENIDO (ESTRUCTURA OFICIAL DE LA PLANTILLA 01 · 02 · 03)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="1" data-time="Min 1:30 - 2:30 (1 min)" data-notes="La presentación se estructura bajo los 3 bloques oficiales del Comité Pedagógico: 01. Objetivo General y Específicos; 02. Impacto en los programas formativos, diseño curricular, procesos BIM, capacidad instalada (convencional + CNC) e hibridación con impresión 3D; y 03. Productos generados, cronograma y etapas hasta el prototipo para INTERZUM 2028.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Comité Pedagógico · Nov 2026</span>
+            <span class="template-project-short">Estructura Oficial de Contenidos</span>
+          </div>
+          <h2 class="template-section-heading" style="color:var(--ctm-burgundy);">
+            CONTENIDO
+            <span class="template-section-subpill">Ruta de Exposición · 20 Minutos</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="contenido-grid">
+          <!-- Columna 01 -->
+          <div class="contenido-col col-01 anim-item delay-1" onclick="goToSlide(2)">
+            <div>
+              <div class="contenido-num-badge">
+                <span>01</span>
+                <span class="pill-badge pill-navy">Diapositiva 3 · 2.5 min</span>
+              </div>
+              <h3 class="contenido-title">1. Objetivo General y Específicos</h3>
+              <ul class="contenido-list">
+                <li><strong>▪ Nombre Oficial del Proyecto:</strong> Sincronizado con la formulación MGA publicada en Railway.</li>
+                <li><strong>▪ Objetivo General (Numeral 10.1 MGA):</strong> Modelo de operación inteligente para infraestructuras modulares en madera con fabricación digital y domótica abierta.</li>
+                <li><strong>▪ 3 Objetivos Específicos (OE1, OE2, OE3):</strong>
+                  Caracterización estructural/IoT, Diseño BIM/CNC/VR y Prototipado funcional con transferencia tecnológica.</li>
+              </ul>
+            </div>
+            <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--line-border); font-size:12px; font-weight:800; color:var(--ctm-navy);">
+              Ir a 01. Objetivos →
+            </div>
+          </div>
+
+          <!-- Columna 02 -->
+          <div class="contenido-col col-02 anim-item delay-2" onclick="goToSlide(3)">
+            <div>
+              <div class="contenido-num-badge">
+                <span>02</span>
+                <span class="pill-badge pill-wood">Diapositivas 4 a 7 · 10.5 min</span>
+              </div>
+              <h3 class="contenido-title">2. Impacto del Proyecto (Programas, Procesos y Planta)</h3>
+              <ul class="contenido-list">
+                <li><strong>▪ Programas Formativos y Diseño Curricular:</strong> Articulación de <em>Carpintería + Ebanistería + Domótica</em> sobre la línea medular de la madera y el mobiliario.</li>
+                <li><strong>▪ Nuevos Procesos BIM en Madera:</strong> Integración de flujos BIM con procesos convencionales de taller.</li>
+                <li><strong>▪ Capacidad Instalada (Convencional + CNC):</strong> Articulación entre maquinaria tradicional del CTM y Router CNC.</li>
+                <li><strong>▪ Hibridación con Impresión 3D:</strong> Maquetas, nodos estructurales y <strong>dispositivos reutilizables (Jigs/Plantillas)</strong> para adaptar máquinas de planta.</li>
+                <li><strong>▪ Empresas, Alianzas y Transferencia:</strong> Impacto en el sector mobiliario y ecoturístico regional.</li>
+              </ul>
+            </div>
+            <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--line-border); font-size:12px; font-weight:800; color:var(--ctm-burgundy);">
+              Ir a 02. Impacto del Proyecto →
+            </div>
+          </div>
+
+          <!-- Columna 03 -->
+          <div class="contenido-col col-03 anim-item delay-3" onclick="goToSlide(7)">
+            <div>
+              <div class="contenido-num-badge">
+                <span>03</span>
+                <span class="pill-badge pill-green">Diapositivas 8 y 9 · 5.5 min</span>
+              </div>
+              <h3 class="contenido-title">3. Productos Generados o Potenciales y Ruta INTERZUM</h3>
+              <ul class="contenido-list">
+                <li><strong>▪ Prototipos Físicos y Digitales:</strong> Maqueta 3D (1:10), Prototipo Funcional en Madera + Nodos 3D + IoT (1:3), Set de Jigs 3D para taller y Gemelo Digital en Unity VR (1:1).</li>
+                <li><strong>▪ Informes, Normas, Pósteres y Catálogos:</strong> Protocolos técnicos, Ficha Técnica Consolidada, catálogo de mobiliario inteligente y divulgación SENNOVA.</li>
+                <li><strong>▪ Cronograma General y 14 Etapas de Producción:</strong> Hoja de ruta técnica (2026–2028) hasta la exhibición en <strong>INTERZUM Bogotá (Mayo 2028)</strong>.</li>
+              </ul>
+            </div>
+            <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--line-border); font-size:12px; font-weight:800; color:var(--sena-green);">
+              Ir a 03. Productos y Cronograma →
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 3: 01. OBJETIVOS (NOMBRE DEL PROYECTO + OBJETIVO GENERAL Y ESPECÍFICOS)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="2" data-time="Min 2:30 - 5:00 (2.5 min)" data-notes="En este primer bloque presentamos el nombre oficial y los objetivos actualizados en nuestra plataforma publicada en Railway. El objetivo general busca desarrollar un modelo de operación inteligente para infraestructuras ecoturísticas modulares integrando fabricación digital en madera y domótica abierta, desglosado en 3 objetivos específicos: Caracterización, Diseño BIM/CNC y Prototipado funcional con Gemelo Digital.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short" id="header-proj-name-1">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            01. Objetivos
+            <span class="template-section-subpill">Versión Oficial Publicada en Railway (MGA)</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <!-- Banda Superior: Nombre Oficial y Objetivo General -->
+        <div class="grid-2 anim-item delay-1">
+          <div class="card-box navy-accent" style="justify-content:center; background:linear-gradient(135deg, #FFFFFF 0%, #F4F7FB 100%);">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <span class="card-kicker">NUMERAL 1.1 Y 10.1 FORMULACIÓN MGA · CENTRO TECNOLÓGICO DEL MOBILIARIO</span>
+              <span class="pill-badge pill-green">Presupuesto MGA: $318.000.000 COP</span>
+            </div>
+            <h3 style="font-size:19px; font-weight:900; color:var(--ctm-navy); line-height:1.25;" id="slide3-project-title">
+              Geodome Smart: Alojamiento Ecoturístico Inteligente con Gemelo Digital Integrado
+            </h3>
+            <div style="padding:12px 14px; background:#FFFFFF; border:1px solid var(--line-border); border-left:4px solid var(--sena-green);">
+              <span style="font-size:10.5px; font-weight:900; text-transform:uppercase; color:var(--sena-green); letter-spacing:0.08em; display:block; margin-bottom:4px;">
+                🎯 OBJETIVO GENERAL DEL PROYECTO
+              </span>
+              <p class="card-text" style="font-size:14px; font-weight:600; color:var(--text-dark);" id="slide3-obj-general">
+                Desarrollar un modelo de operación inteligente para infraestructuras ecoturísticas modulares mediante la integración de flujos de fabricación digital y sistemas de domótica abierta, orientado a fortalecer las competencias técnicas en Construcción 4.0 y optimizar la eficiencia operativa en alojamientos sostenibles.
+              </p>
+            </div>
+          </div>
+
+          <div class="img-showcase-card" onclick="openPresLightbox('./assets/img/domo_isometrico_hero.png', 'Vista Isométrica General del Prototipo Geodome Smart')">
+            <img src="./assets/img/domo_isometrico_hero.png" alt="Vista Isométrica Geodome Smart" style="height:205px;" />
+            <div class="img-showcase-caption">
+              <span>Vista Isométrica · Madera + Nodos 3D + Domótica Solar IoT</span>
+              <span style="color:var(--wood-terracotta);">⛶ Ampliar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banda Inferior: Los 3 Objetivos Específicos -->
+        <div class="grid-3 anim-item delay-2">
+          <div class="card-box green-accent">
+            <span class="card-kicker" style="color:var(--sena-green);">OBJETIVO ESPECÍFICO 1 · CARACTERIZACIÓN ESTRUCTURAL E IoT</span>
+            <h4 class="card-title">1. Variables de Marcos Rígidos y Hardware Abierto</h4>
+            <p class="card-text" id="slide3-oe1">
+              Caracterizar las variables de diseño estructural de marcos rígidos y los requerimientos técnicos de automatización (IoT), mediante el análisis de comportamiento de cargas y la evaluación de protocolos de hardware abierto, para definir los parámetros técnicos de integración en la infraestructura modular.
+            </p>
+            <div style="margin-top:auto; padding-top:8px; border-top:1px solid var(--line-border); font-size:11.5px; font-weight:700; color:var(--ctm-navy);">
+              📦 Entregable: Informe técnico de parámetros integrados (Estructura + IoT).
+            </div>
+          </div>
+
+          <div class="card-box navy-accent">
+            <span class="card-kicker">OBJETIVO ESPECÍFICO 2 · DISEÑO BIM, FABRICACIÓN DIGITAL Y VR</span>
+            <h4 class="card-title">2. Modelo BIM, Mecanizado y Arquitectura Domótica</h4>
+            <p class="card-text" id="slide3-oe2">
+              Diseñar un modelo de infraestructura inteligente basado en flujos de trabajo BIM, que articule la fabricación digital (CNC) con una arquitectura abierta de domótica (IoT), estableciendo los protocolos técnicos para la integración nativa de sensores y actuadores en marcos rígidos de madera.
+            </p>
+            <div style="margin-top:auto; padding-top:8px; border-top:1px solid var(--line-border); font-size:11.5px; font-weight:700; color:var(--ctm-navy);">
+              📦 Entregable: Modelo BIM, cartas de producción/CNC, manual de ensamble y Gemelo VR.
+            </div>
+          </div>
+
+          <div class="card-box wood-accent">
+            <span class="card-kicker" style="color:var(--wood-terracotta);">OBJETIVO ESPECÍFICO 3 · PROTOTIPADO Y TRANSFERENCIA</span>
+            <h4 class="card-title">3. Unidad Funcional a Escala y Gemelo Digital</h4>
+            <p class="card-text" id="slide3-oe3">
+              Prototipar una unidad ecoturística funcional, implementando el modelo de operación inteligente y el gemelo digital para validar, en entornos controlados, la gestión autónoma de variables críticas y la viabilidad de transferencia tecnológica al sector productivo y académico.
+            </p>
+            <div style="margin-top:auto; padding-top:8px; border-top:1px solid var(--line-border); font-size:11.5px; font-weight:700; color:var(--wood-terracotta);">
+              📦 Entregable: Prototipo funcional a escala + Gemelo Digital operativo (INTERZUM 2028).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 4: 02. IMPACTO (MEJORA DE CONTENIDOS Y DISEÑO CURRICULAR ARTICULADO)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="3" data-time="Min 5:00 - 8:00 (3 min)" data-notes="Punto clave para el Comité Pedagógico: ¿Cómo impacta este proyecto la Formación Profesional Integral en el CTM? Proponemos una ruta de actualización de contenidos y un posible diseño curricular que articula Carpintería, Ebanistería y Domótica alrededor del mobiliario y la línea medular de la madera.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            02. Impacto
+            <span class="template-section-subpill">Formación Profesional &amp; Diseño Curricular en la Línea Medular de la Madera</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="card-box burgundy-accent anim-item delay-1" style="padding:14px 20px; background:#FFFDFB;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span class="card-kicker" style="color:var(--ctm-burgundy);">PROPUESTA PEDAGÓGICA PARA EL CTM · LÍNEA MEDULAR DE LA MADERA Y EL MOBILIARIO</span>
+              <h3 style="font-size:18px; font-weight:900; color:var(--text-dark);">
+                Articulación Curricular Tripartita: Carpintería Estructural + Ebanistería de Mobiliario + Domótica Abierta (IoT)
+              </h3>
+            </div>
+            <span class="pill-badge pill-green">Aprendizaje Basado en Proyectos Reales (Construcción 4.0 &amp; Smart Furniture)</span>
+          </div>
+        </div>
+
+        <!-- 3 Pilares del Diseño Curricular Articulado -->
+        <div class="grid-3 anim-item delay-2">
+          <div class="card-box wood-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker" style="color:var(--wood-terracotta);">EJE 1 · CARPINTERÍA ARQUITECTÓNICA</span>
+              <span class="pill-badge pill-wood">Estructura en Madera</span>
+            </div>
+            <h4 class="card-title">Carpintería de Marcos Rígidos y Sistemas Modulares</h4>
+            <p class="card-text">
+              Actualiza los contenidos tradicionales de carpintería hacia <strong>estructuras geodésicas ligeras, prefabricación modular ("Kit de Partes") y ensambles híbridos madera-polímero 3D</strong> bajo norma NSR-10 Título G.
+            </p>
+            <ul class="contenido-list" style="font-size:12.2px; margin-top:4px;">
+              <li>✔ Geometría espacial, cortes compuestos y ángulos diedros en madera.</li>
+              <li>✔ Pre-canalización estructural oculta para redes eléctricas y sensores sin debilitar la fibra.</li>
+              <li>✔ Montaje en seco de rápido ensamble y desensamble para hábitats ecoturísticos.</li>
+            </ul>
+          </div>
+
+          <div class="card-box navy-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker">EJE 2 · EBANISTERÍA Y MOBILIARIO</span>
+              <span class="pill-badge pill-navy">Línea Medular del Mueble</span>
+            </div>
+            <h4 class="card-title">Ebanistería Funcional y Mobiliario Inteligente (Smart Furniture)</h4>
+            <p class="card-text">
+              Eleva la ebanistería clásica hacia el <strong>diseño de mobiliario ergonómico adaptado a envolventes curvas</strong> que integra de fábrica tecnología invisible y gestión del confort.
+            </p>
+            <ul class="contenido-list" style="font-size:12.2px; margin-top:4px;">
+              <li>✔ Mobiliario multifuncional en madera (cocina compacta, zona de descanso, escritorio y luminarias).</li>
+              <li>✔ Diseño de <strong>nichos técnicos fresados, pasacables ocultos y compartimentos ventilados</strong> dentro del mueble.</li>
+              <li>✔ Integración estética de pantallas de control, tiras LED direccionables y herrajes motorizados.</li>
+            </ul>
+          </div>
+
+          <div class="card-box green-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker" style="color:var(--sena-green);">EJE 3 · DOMÓTICA Y MEDIALAB</span>
+              <span class="pill-badge pill-green">Electrónica + IoT + VR</span>
+            </div>
+            <h4 class="card-title">Domótica Abierta Aplicada al Mueble y al Hábitat</h4>
+            <p class="card-text">
+              Conecta a los aprendices de informática, electrónica y diseño con el taller de madera mediante <strong>arquitecturas abiertas sin costo de licencias (ESP32 + ESPHome + Home Assistant)</strong>.
+            </p>
+            <ul class="contenido-list" style="font-size:12.2px; margin-top:4px;">
+              <li>✔ Sensado ambiental (temperatura cenital/base, humedad, humo en chimenea y energía solar).</li>
+              <li>✔ Automatización de ventanales motorizados e iluminación circadiana integrada en la madera.</li>
+              <li>✔ Sincronización en tiempo real con el <strong>Gemelo Digital 1:1 en Unity VR</strong> y App Móvil.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Impacto en Programas, Empresas, Alianzas y Transferencia -->
+        <div class="grid-4 anim-item delay-3">
+          <div class="card-box" style="padding:12px 14px; background:var(--bg-subtle);">
+            <span class="card-kicker">01 · NUEVO DISEÑO CURRICULAR</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Módulo Formativo Complementario / Especialización</strong>
+            <span style="font-size:12px; color:var(--text-body);">Ruta formativa en <em>"Fabricación de Mobiliario y Estructuras en Madera con Integración Domótica e Industria 4.0"</em>.</span>
+          </div>
+          <div class="card-box" style="padding:12px 14px; background:var(--bg-subtle);">
+            <span class="card-kicker">02 · PROGRAMAS BENEFICIADOS CTM</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">+20 Aprendices en Semilleros + Instructores</strong>
+            <span style="font-size:12px; color:var(--text-body);">Diseño de Mobiliario, Carpintería, Construcción en Madera, Automatización y Desarrollo en Medialab.</span>
+          </div>
+          <div class="card-box" style="padding:12px 14px; background:var(--bg-subtle);">
+            <span class="card-kicker">03 · EMPRESAS Y SECTOR PRODUCTIVO</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">MiPymes del Mueble y Ecoturismo</strong>
+            <span style="font-size:12px; color:var(--text-body);">Transferencia de mobiliario y cabañas modulares de alto valor agregado sin pago de licencias domóticas.</span>
+          </div>
+          <div class="card-box" style="padding:12px 14px; background:var(--bg-subtle);">
+            <span class="card-kicker">04 · ALIANZAS Y PROYECCIÓN</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Matermob · Medialab · INTERZUM 2028</strong>
+            <span style="font-size:12px; color:var(--text-body);">Posicionamiento del CTM Regional Antioquia en la feria líder de procesamiento de madera y mobiliario.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 5: 02. IMPACTO (NUEVOS PROCESOS BIM INTEGRADOS A PROCESOS CONVENCIONALES DE LA MADERA)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="4" data-time="Min 8:00 - 10:30 (2.5 min)" data-notes="Requerimiento 3: ¿Cómo el desarrollo del proyecto genera nuevos procesos BIM para integrarlos con los procesos convencionales de la madera? Tradicionalmente BIM se usa en concreto y acero; aquí creamos un protocolo BIM para Madera y Mobiliario (BIM-to-Taller) donde cada listón, mueble y canalización domótica sale del modelo digital hacia cartas de producción ejecutables en máquinas convencionales.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            02. Impacto
+            <span class="template-section-subpill">Nuevos Procesos BIM Integrados a la Fabricación Convencional de la Madera</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="process-flow anim-item delay-1">
+          <div class="flow-step">
+            <span class="flow-step-num">ETAPA BIM 01</span>
+            <h4 class="card-title" style="font-size:15px;">Modelado Paramétrico &amp; Familias en Madera</h4>
+            <p class="card-text" style="font-size:12.2px; margin-top:4px;">
+              Creación de bibliotecas BIM de <strong>perfiles de madera, paneles, herrajes y mobiliario interior</strong> con propiedades reales de veta, escuadría, contracción y tolerancias de ensamble.
+            </p>
+          </div>
+          <div class="flow-step" style="border-top-color:var(--wood-terracotta);">
+            <span class="flow-step-num" style="background:var(--wood-terracotta);">ETAPA BIM 02</span>
+            <h4 class="card-title" style="font-size:15px;">Coordinación MEP-Domótica en Madera (Clash Detection)</h4>
+            <p class="card-text" style="font-size:12.2px; margin-top:4px;">
+              Trazado digital anticipado de <strong>tubería EMT, conduletas, cajas eléctricas, sensores y nichos en el mobiliario</strong> antes de cortar una sola pieza de madera en el taller.
+            </p>
+          </div>
+          <div class="flow-step" style="border-top-color:var(--sena-green);">
+            <span class="flow-step-num" style="background:var(--sena-green);">ETAPA BIM 03</span>
+            <h4 class="card-title" style="font-size:15px;">Traducción a Cartas de Producción Convencional</h4>
+            <p class="card-text" style="font-size:12.2px; margin-top:4px;">
+              El modelo BIM exporta automáticamente <strong>listas de despiece (BOM), ángulos de inglete/bisel para sierra escuadradora, hojas de ruta de cepillado/regruesado y plantillas 1:1</strong>.
+            </p>
+          </div>
+          <div class="flow-step" style="border-top-color:var(--ctm-burgundy);">
+            <span class="flow-step-num" style="background:var(--ctm-burgundy);">ETAPA BIM 04</span>
+            <h4 class="card-title" style="font-size:15px;">Trazabilidad por Código QR y Gemelo Digital VR</h4>
+            <p class="card-text" style="font-size:12.2px; margin-top:4px;">
+              Cada pieza trabajada en carpintería convencional conserva su <strong>ID del modelo BIM</strong> para el montaje guiado y se sincroniza con el modelo VR-Ready en Unity.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2-equal anim-item delay-2">
+          <div class="img-showcase-card" onclick="openPresLightbox('./assets/img/presentacion/planta_baja_y_corte_domotica.jpg', 'Planta Baja y Corte A-A: Coordinación BIM de Estructura en Madera, Mobiliario e Instalaciones de Domótica')">
+            <img src="./assets/img/presentacion/planta_baja_y_corte_domotica.jpg" alt="Planta Baja y Corte A-A Instalaciones Domótica" style="height:245px;" />
+            <div class="img-showcase-caption">
+              <span>Plano BIM 1:50 · Coordinación de Madera, Mobiliario y Red Domótica</span>
+              <span style="color:var(--wood-terracotta);">⛶ Ampliar Plano</span>
+            </div>
+          </div>
+
+          <div class="img-showcase-card" onclick="openPresLightbox('./assets/img/presentacion/vista_entrada_interior.jpg', 'Perspectiva Interior: Articulación de Estructura en Madera, Escalera, Cocina, Mobiliario y Canalización')">
+            <img src="./assets/img/presentacion/vista_entrada_interior.jpg" alt="Vista Interior Estructura y Mobiliario en Madera" style="height:245px;" />
+            <div class="img-showcase-caption">
+              <span>Integración Espacial · Estructura Geodésica + Ebanistería Interior + EMT</span>
+              <span style="color:var(--wood-terracotta);">⛶ Ampliar Vista</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 6: 02. IMPACTO (CAPACIDAD INSTALADA: MAQUINARIA CONVENCIONAL + ARTICULACIÓN CON CNC)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="5" data-time="Min 10:30 - 13:00 (2.5 min)" data-notes="Requerimiento 4: ¿Cómo trabajamos con la capacidad instalada del CTM, sus máquinas y herramientas convencionales, y cómo se articulan con la máquina CNC? En vez de depender 100% del CNC (lo cual genera cuellos de botella), planteamos una línea de producción balanceada donde el 70% del procesamiento volumétrico se hace en maquinaria convencional y el CNC ejecuta las operaciones de precisión e integración domótica.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            02. Impacto
+            <span class="template-section-subpill">Capacidad Instalada: Maquinaria Convencional + Articulación con Router CNC</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3 anim-item delay-1">
+          <!-- Columna 1: Maquinaria y Herramientas Convencionales -->
+          <div class="card-box wood-accent">
+            <span class="card-kicker" style="color:var(--wood-terracotta);">ETAPA EN PLANTA 1 · TALLER CONVENCIONAL CTM</span>
+            <h4 class="card-title">Maquinaria y Herramientas Convencionales de Madera</h4>
+            <p class="card-text">
+              Aprovechamiento pleno de los talleres de carpintería y ebanistería del CTM para la preparación estructural y del mobiliario:
+            </p>
+            <ul class="contenido-list" style="font-size:12.3px;">
+              <li><strong>▪ Dimensionado y Escuadrado:</strong> Sierra circular escuadradora, sierra sinfín e ingleteadora para cortes longitudinales y transversales de listones y tableros.</li>
+              <li><strong>▪ Preparación Geométrica:</strong> Cepilladora (canteadora) y regruesadora para garantizar caras de referencia planas y espesores calibrados antes de entrar a plantillas o CNC.</li>
+              <li><strong>▪ Ebanistería y Acabados:</strong> Trompo (tupí), taladro de árbol/horizontal, ruteadoras manuales, lijadoras de banda/orbital, prensas de banco y cabina de recubrimientos.</li>
+            </ul>
+          </div>
+
+          <!-- Columna 2: Articulación e Interfaz Convencional <-> CNC -->
+          <div class="card-box navy-accent" style="background:linear-gradient(180deg, #F4F7FB 0%, #FFFFFF 100%);">
+            <span class="card-kicker">ETAPA EN PLANTA 2 · PROTOCOLO DE ARTICULACIÓN</span>
+            <h4 class="card-title">Puente Técnico: Taller Convencional ↔ Máquina CNC</h4>
+            <p class="card-text">
+              El proyecto establece un <strong>protocolo de manufactura balanceada</strong> que evita saturar el Router CNC y enseña al aprendiz cuándo usar cada tecnología:
+            </p>
+            <ul class="contenido-list" style="font-size:12.3px;">
+              <li><strong>1. Cero Referencia Unificado (Datum):</strong> Las caras cepilladas y escuadradas en las máquinas convencionales sirven como <em>tope cero exacto</em> sobre la mesa del CNC.</li>
+              <li><strong>2. Pre-desbaste Convencional:</strong> Los cortes rectos largos se hacen en escuadradora (3 veces más rápido), reservando el CNC para geometrías complejas y cajeados.</li>
+              <li><strong>3. Post-procesamiento en Banco:</strong> El CNC entrega piezas con guías de pre-ensamble que pasan directamente a bancos de carpintería convencional para lijado, inmunizado y montaje en seco.</li>
+            </ul>
+          </div>
+
+          <!-- Columna 3: Rol Específico de la Máquina CNC -->
+          <div class="card-box green-accent">
+            <span class="card-kicker" style="color:var(--sena-green);">ETAPA EN PLANTA 3 · FABRICACIÓN DIGITAL CNC</span>
+            <h4 class="card-title">Operaciones de Alta Precisión en el Router CNC</h4>
+            <p class="card-text">
+              La máquina CNC de 3/4 ejes del CTM interviene estratégicamente en las operaciones donde aporta valor insustituible:
+            </p>
+            <ul class="contenido-list" style="font-size:12.3px;">
+              <li><strong>▪ Cajeados y Nichos Domóticos:</strong> Fresado milimétrico de cavidades embebidas para sensores (DHT22, humo), pantallas, servomotores y canales ocultos para cableado.</li>
+              <li><strong>▪ Nesting de Cerramientos y Mobiliario Curvo:</strong> Corte optimizado de paneles triangulares, costillas curvas del mobiliario y piezas del deck con mínimo desperdicio.</li>
+              <li><strong>▪ Repetibilidad para Kit de Partes:</strong> Garantiza intercambiabilidad 100% entre piezas para el montaje y desmontaje en <strong>INTERZUM 2028</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Imagen de Perspectiva Interna con Domótica + Resumen de Capacidad Instalada -->
+        <div class="grid-2 anim-item delay-2">
+          <div class="card-box" style="justify-content:center; background:var(--bg-subtle);">
+            <span class="card-kicker">IMPACTO OPERATIVO EN LOS TALLERES DEL CENTRO TECNOLÓGICO DEL MOBILIARIO</span>
+            <h4 class="card-title">Ventajas del Modelo Articulado (Convencional + CNC + Medialab)</h4>
+            <div class="grid-3" style="gap:12px; margin-top:4px;">
+              <div style="background:#FFFFFF; padding:10px 12px; border:1px solid var(--line-border);">
+                <strong style="font-size:18px; color:var(--ctm-navy); display:block;">-60% Tiempo CNC</strong>
+                <span style="font-size:11.5px; color:var(--text-body);">Al delegar el corte primario y regruesado a máquinas convencionales.</span>
+              </div>
+              <div style="background:#FFFFFF; padding:10px 12px; border:1px solid var(--line-border);">
+                <strong style="font-size:18px; color:var(--sena-green); display:block;">100% Transferible</strong>
+                <span style="font-size:11.5px; color:var(--text-body);">Replicable por talleres y MiPymes que combinan máquinas clásicas con servicios CNC.</span>
+              </div>
+              <div style="background:#FFFFFF; padding:10px 12px; border:1px solid var(--line-border);">
+                <strong style="font-size:18px; color:var(--wood-terracotta); display:block;">Tolerancia ±0.2 mm</strong>
+                <span style="font-size:11.5px; color:var(--text-body);">Ajuste exacto entre listones de madera, herrajes, nodos 3D y electrónica IoT.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="img-showcase-card" onclick="openPresLightbox('./assets/img/presentacion/perspectiva_interior_domotica.jpg', 'Perspectiva Interna: Integración de Estructura de Madera, Mobiliario de Ebanistería y Red de Domótica')">
+            <img src="./assets/img/presentacion/perspectiva_interior_domotica.jpg" alt="Perspectiva Interna Domótica y Mobiliario" style="height:155px;" />
+            <div class="img-showcase-caption">
+              <span>Resultado en Obra · Madera + Mobiliario + Domótica Integrada</span>
+              <span style="color:var(--wood-terracotta);">⛶ Ampliar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 7: 02. IMPACTO (HIBRIDACIÓN IMPRESIÓN 3D DE DISPOSITIVOS REUTILIZABLES + MECANIZADO EN PLANTA)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="6" data-time="Min 13:00 - 15:30 (2.5 min)" data-notes="Requerimiento 5 (Innovación central en planta): ¿Cómo usamos la impresión 3D más allá de hacer maquetas? Proponemos una hibridación donde la impresión 3D fabrica DISPOSITIVOS REUTILIZABLES (Jigs, plantillas de ruteo, guías de perforación angular, topes graduados y mordazas) que se montan sobre las máquinas convencionales del taller de madera para fabricar piezas complejas con precisión industrial.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            02. Impacto
+            <span class="template-section-subpill">Hibridación Impresión 3D de Dispositivos Reutilizables + Mecanizado en Planta</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2 anim-item delay-1">
+          <!-- Izquierda: Los 3 Niveles de la Impresión 3D en el Proyecto -->
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div class="card-box navy-accent" style="padding:14px 18px;">
+              <span class="card-kicker">NIVEL 1 · VALIDACIÓN GEOMÉTRICA PRELIMINAR (ESCALA 1:10)</span>
+              <h4 class="card-title" style="font-size:15.5px;">1. Maquetas Estructurales y Validación de Frecuencias</h4>
+              <p class="card-text" style="font-size:12.5px;">
+                Impresión 3D completa de barras y nodos a pequeña escala para verificar estabilidad, secuencia de montaje y ubicación de sensores antes de consumir madera en planta.
+              </p>
+            </div>
+
+            <div class="card-box wood-accent" style="padding:14px 18px;">
+              <span class="card-kicker" style="color:var(--wood-terracotta);">NIVEL 2 · COMPONENTES FUNCIONALES DEL PRODUCTO (ESCALA 1:3)</span>
+              <h4 class="card-title" style="font-size:15.5px;">2. Nodos de Unión Estructural y Encapsulados IoT (PETG / ABS-CF)</h4>
+              <p class="card-text" style="font-size:12.5px;">
+                Conectores multiaxiales impresos en 3D con <strong>canal pasacables interno</strong> que reciben los perfiles de madera y carcasas a medida (enclosures) para sensores y servomotores.
+              </p>
+            </div>
+
+            <div class="card-box green-accent" style="padding:16px 18px; background:linear-gradient(135deg, #F2FBF0 0%, #FFFFFF 100%); border-width:2px; border-color:var(--sena-green);">
+              <span class="card-kicker" style="color:#206300;">NIVEL 3 (INNOVACIÓN EN PLANTA) · UTILLAJE Y ADAPTACIÓN DE MÁQUINAS</span>
+              <h4 class="card-title" style="font-size:16px; color:#144500;">
+                3. Dispositivos Reutilizables Impresos en 3D (Jigs &amp; Fixtures) para Adaptar las Máquinas de la Planta de Producción
+              </h4>
+              <p class="card-text" style="font-size:12.8px; color:var(--text-dark);">
+                La impresión 3D se convierte en <strong>herramental de planta</strong>: diseñamos e imprimimos dispositivos técnicos reutilizables con insertos metálicos y bujes de acero que se acoplan a las máquinas convencionales del CTM para mecanizar piezas de madera con precisión de control numérico.
+              </p>
+            </div>
+          </div>
+
+          <!-- Derecha: Detalle del Nodo 3D + Catálogo de los 4 Dispositivos Reutilizables para Planta -->
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div class="img-showcase-card" onclick="openPresLightbox('./assets/img/detalle_nodo_3d_es.png', 'Detalle Técnico: Sistema de Unión Impreso en 3D Acoplado a Perfiles de Madera Mecanizada')">
+              <img src="./assets/img/detalle_nodo_3d_es.png" alt="Detalle Nodo Unión 3D y Madera" style="height:165px;" />
+              <div class="img-showcase-caption">
+                <span>Hibridación Constructiva · Madera Mecanizada + Ingeniería Aditiva 3D</span>
+                <span style="color:var(--wood-terracotta);">⛶ Ampliar Detalle</span>
+              </div>
+            </div>
+
+            <div class="card-box" style="background:var(--bg-subtle); padding:14px 16px;">
+              <span class="card-kicker">4 FAMILIAS DE DISPOSITIVOS 3D REUTILIZABLES PARA LAS MÁQUINAS DE PLANTA</span>
+              <div class="grid-2-equal" style="gap:10px; margin-top:4px;">
+                <div style="background:#FFFFFF; padding:9px 11px; border:1px solid var(--line-border); border-left:3px solid var(--ctm-navy);">
+                  <strong style="font-size:12px; color:var(--ctm-navy); display:block;">A. Carros y Topes Angulares para Escuadradora</strong>
+                  <span style="font-size:11.3px; color:var(--text-body);">Calzos y cunas impresas en 3D con los ángulos diedros exactos del domo para cortes compuestos repetitivos en sierra escuadradora e ingleteadora.</span>
+                </div>
+                <div style="background:#FFFFFF; padding:9px 11px; border:1px solid var(--line-border); border-left:3px solid var(--sena-green);">
+                  <strong style="font-size:12px; color:#206300; display:block;">B. Plantillas de Ruteo para Nichos IoT</strong>
+                  <span style="font-size:11.3px; color:var(--text-body);">Plantillas reutilizables con collarín copiador para que una ruteadora manual o tupí frese en segundos las cajas exactas de sensores y pantallas en la madera.</span>
+                </div>
+                <div style="background:#FFFFFF; padding:9px 11px; border:1px solid var(--line-border); border-left:3px solid var(--wood-terracotta);">
+                  <strong style="font-size:12px; color:#9E4720; display:block;">C. Guías de Taladrado Axial (Drill Jigs)</strong>
+                  <span style="font-size:11.3px; color:var(--text-body);">Dispositivos 3D autocentrantes con bujes de acero templado para perforar en taladro de árbol los pasadores M6/M8 que unen la madera con los nodos 3D.</span>
+                </div>
+                <div style="background:#FFFFFF; padding:9px 11px; border:1px solid var(--line-border); border-left:3px solid var(--ctm-burgundy);">
+                  <strong style="font-size:12px; color:var(--ctm-burgundy); display:block;">D. Prensas de Ensamble y Pods para CNC</strong>
+                  <span style="font-size:11.3px; color:var(--text-body);">Escuadras de posicionamiento multi-ángulo para bancos de armado y mordazas (pods) a medida para sujetar piezas pre-cortadas en el Router CNC.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 8: 03. PRODUCTOS DESARROLLADOS O POTENCIALES (ESTRUCTURA PLANTILLA)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="7" data-time="Min 15:30 - 17:30 (2 min)" data-notes="Entramos al Bloque 03 de la plantilla del Comité Pedagógico: Productos desarrollados o potenciales. Aquí clasificamos todos los productos tangibles e intangibles del proyecto según las categorías institucionales: Prototipos, Informes de investigación, Normas y protocolos, Catálogos, Pósteres y Eventos de divulgación.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            03. Productos desarrollados o potenciales
+            <span class="template-section-subpill">Entregables SENNOVA · Matermob · Medialab</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3 anim-item delay-1">
+          <!-- 1. Prototipos -->
+          <div class="card-box green-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker" style="color:var(--sena-green);">CATEGORÍA 1 · PROTOTIPOS FUNCIONALES</span>
+              <span class="pill-badge pill-green">4 Prototipos</span>
+            </div>
+            <h4 class="card-title">Prototipos Físicos, Utillaje 3D y Gemelo VR</h4>
+            <ul class="contenido-list" style="font-size:12.4px;">
+              <li><strong>1. Maqueta Preliminar 100% Impresión 3D (Escala 1:10):</strong> Validador geométrico y estructural de marcos y nodos.</li>
+              <li><strong>2. Prototipo Funcional a Escala en Madera + Nodos 3D + Domótica IoT (Escala 1:3):</strong> Unidad física con mobiliario integrado, ventilación motorizada, control térmico y energía solar.</li>
+              <li><strong>3. Kit de Dispositivos Reutilizables 3D (Jigs) para Planta:</strong> Set de plantillas de ruteo, guías de taladrado y topes angulares para las máquinas del CTM.</li>
+              <li><strong>4. Gemelo Digital 1:1 en Unity VR + App Móvil:</strong> Entorno virtual inmersivo conectado bidireccionalmente (MQTT) con los sensores y actuadores físicos.</li>
+            </ul>
+          </div>
+
+          <!-- 2. Informes de Investigación, Normas y Protocolos -->
+          <div class="card-box navy-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker">CATEGORÍA 2 · INFORMES, NORMAS Y PROTOCOLOS</span>
+              <span class="pill-badge pill-navy">Documentación Técnica</span>
+            </div>
+            <h4 class="card-title">Informes de Investigación y Estándares Técnicos</h4>
+            <ul class="contenido-list" style="font-size:12.4px;">
+              <li><strong>1. Informe Técnico de Caracterización (OE1):</strong> Análisis de cargas bajo norma <strong>NSR-10 Título G (Madera)</strong> y matriz de selección de hardware abierto IoT.</li>
+              <li><strong>2. Protocolo BIM-to-Woodshop &amp; CNC (OE2):</strong> Estándar técnico para articular el modelado BIM con máquinas convencionales, dispositivos 3D y Router CNC.</li>
+              <li><strong>3. Manual de Ensamble y Carta de Producción:</strong> Guía paso a paso del "Kit de Partes" para montaje y desmontaje rápido.</li>
+              <li><strong>4. Ficha Técnica Consolidada de Investigación:</strong> Documento vivo generado desde la plataforma web del proyecto.</li>
+            </ul>
+          </div>
+
+          <!-- 3. Catálogos, Pósteres y Eventos de Divulgación -->
+          <div class="card-box wood-accent">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="card-kicker" style="color:var(--wood-terracotta);">CATEGORÍA 3 · CATÁLOGOS, PÓSTERES Y EVENTOS</span>
+              <span class="pill-badge pill-wood">Divulgación y Feria</span>
+            </div>
+            <h4 class="card-title">Catálogos de Producto y Eventos de Divulgación</h4>
+            <ul class="contenido-list" style="font-size:12.4px;">
+              <li><strong>1. Catálogo Técnico de Nodos Híbridos, Jigs 3D y Mobiliario Domótico:</strong> Librería abierta de conectores 3D, dispositivos de taller y mobiliario inteligente para aprendices y empresas.</li>
+              <li><strong>2. Pósteres Científicos y Ponencias SENNOVA:</strong> Divulgación de resultados del grupo <strong>Matermob</strong> y <strong>Medialab CTM</strong> en ferias de innovación (+Inn, 3D Fest, encuentros regionales).</li>
+              <li><strong>3.Plataforma Web Interactiva (Desplegada en Railway):</strong> Repositorio digital de trazabilidad MGA, bitácora visual cronológica y recursos 3D.</li>
+              <li><strong>4. Exhibición Internacional en INTERZUM Bogotá (Mayo 2028):</strong> Muestra tecnológica principal del CTM ante la industria del mueble y la madera.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-box anim-item delay-2" style="background:var(--ctm-navy-dark); color:#FFFFFF; padding:14px 22px; flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+          <div>
+            <span style="font-size:10.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:#68D391; display:block;">
+              VALOR DIFERENCIAL PARA EL CENTRO TECNOLÓGICO DEL MOBILIARIO
+            </span>
+            <strong style="font-size:15px;">
+              Todos los activos (Modelos BIM, Rutas CNC, Archivos .STL de Nodos y Dispositivos para Máquinas, y Proyecto Unity VR) quedan instalados como capacidad permanente del CTM.
+            </strong>
+          </div>
+          <span class="pill-badge" style="background:var(--sena-green); color:#FFFFFF; font-size:11px; padding:6px 12px;">
+            Licenciamiento 100% Abierto · Transferencia Inmediata
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 9: 03. PRODUCTOS (CRONOGRAMA GENERAL Y LAS 14 ETAPAS DE PRODUCCIÓN RUMBO A INTERZUM 2028)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="8" data-time="Min 17:30 - 19:30 (2 min)" data-notes="Requerimiento 6: Presentamos el cronograma de trabajo (Noviembre 2026 a Mayo 2028) y las 14 etapas técnicas de producción que llevan desde la investigación estructural y maqueta 3D, pasando por la fabricación híbrida en madera con dispositivos 3D y CNC, hasta las pruebas integrales con el Gemelo Digital VR para presentar el prototipo funcional a escala en INTERZUM Bogotá en mayo de 2028.">
+      <div class="template-topbar">
+        <div class="template-header-left">
+          <div class="template-kicker-block">
+            <span class="template-kicker-sup">Competitividad y Desarrollo Tecnológico</span>
+            <span class="template-project-short">Geodome Smart · CTM</span>
+          </div>
+          <h2 class="template-section-heading">
+            03. Productos desarrollados o potenciales
+            <span class="template-section-subpill">Cronograma de Trabajo y Etapas de Producción rumbo a INTERZUM 2028</span>
+          </h2>
+        </div>
+        <div class="template-logos-strip">
+          <img src="./assets/img/presentacion/image1.png" alt="Matermob" class="logo-matermob" />
+          <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" class="logo-sennova" />
+          <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" class="logo-ctm-main" />
+        </div>
+      </div>
+
+      <div class="slide-body" style="gap:12px;">
+        <!-- Línea de Tiempo Macro por Fases (2026 - 2028) -->
+        <div class="grid-4 anim-item delay-1">
+          <div class="card-box navy-accent" style="padding:11px 14px;">
+            <span class="card-kicker">FASE I · NOV 2026 – ABR 2027</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Ingeniería, BIM, Nodos 3D y Maqueta 1:10</strong>
+            <span style="font-size:11.5px; color:var(--text-body);">Etapas DEV-01 a DEV-05 · Caracterización estructural, modelo BIM/VR, diseño de uniones/jigs 3D, análisis IoT y maqueta impresa en 3D.</span>
+          </div>
+          <div class="card-box wood-accent" style="padding:11px 14px;">
+            <span class="card-kicker" style="color:var(--wood-terracotta);">FASE II · ABR 2027 – OCT 2027</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Pruebas Mecánicas, Jigs de Planta y Unity VR</strong>
+            <span style="font-size:11.5px; color:var(--text-body);">Etapas DEV-06 a DEV-08 · Ensayos de tolerancia nodo 3D + madera, dispositivos 3D para máquinas, enclosures IoT y entorno Unity VR 1:1.</span>
+          </div>
+          <div class="card-box green-accent" style="padding:11px 14px;">
+            <span class="card-kicker" style="color:var(--sena-green);">FASE III · AGO 2027 – FEB 2028</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Producción Prototipo Madera 1:3 + Domótica</strong>
+            <span style="font-size:11.5px; color:var(--text-body);">Etapas DEV-09 a DEV-11 · Mecanizado híbrido (Convencional + Jigs 3D + CNC), montaje en madera con uniones 3D, instalación domótica solar y puente MQTT.</span>
+          </div>
+          <div class="card-box burgundy-accent" style="padding:11px 14px; background:#FFF8F6;">
+            <span class="card-kicker" style="color:var(--ctm-burgundy);">FASE IV · ENE 2028 – MAYO 2028</span>
+            <strong style="font-size:13.5px; color:var(--text-dark);">Validación Física/VR y Exhibición INTERZUM</strong>
+            <span style="font-size:11.5px; color:var(--text-body);">Etapas DEV-12 a DEV-14 · Pruebas con App Móvil, validación simultánea prototipo físico ↔ gafas VR, Ficha Técnica y montaje en INTERZUM Bogotá.</span>
+          </div>
+        </div>
+
+        <!-- Tabla Consolidada de las Etapas de Producción hasta el Prototipo a Escala -->
+        <div class="anim-item delay-2" style="overflow-x:auto;">
+          <table class="pres-table">
+            <thead>
+              <tr>
+                <th style="width:9%;">Código</th>
+                <th style="width:27%;">Etapa de Producción hacia el Prototipo</th>
+                <th style="width:22%;">Articulación Tecnológica (Madera / 3D / CNC / IoT / VR)</th>
+                <th style="width:16%;">Periodo Programado</th>
+                <th style="width:26%;">Entregable Verificador rumbo a INTERZUM 2028</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill-badge pill-navy">DEV-01 · 02</span></td>
+                <td><strong>1. Diseño Estructural y Modelado BIM / VR-Ready</strong></td>
+                <td>Geometría geodésica NSR-10 + Modelo BIM LOD 350 + Malla FBX para Unity</td>
+                <td><strong>Nov 2026 – Feb 2027</strong></td>
+                <td>Planos estructurales, cartas de corte convencional y modelo BIM/VR</td>
+              </tr>
+              <tr>
+                <td><span class="pill-badge pill-wood">DEV-03 · 05</span></td>
+                <td><strong>2. Sistema de Uniones 3D, Maqueta 1:10 y Jigs de Planta</strong></td>
+                <td>Impresión 3D FDM (PLA+/PETG) de maqueta 1:10, nodos pasacables y plantillas</td>
+                <td><strong>Ene 2027 – Abr 2027</strong></td>
+                <td>Maqueta física 1:10 validada + Set de dispositivos 3D para máquinas</td>
+              </tr>
+              <tr>
+                <td><span class="pill-badge pill-green">DEV-04 · 07</span></td>
+                <td><strong>3. Ingeniería Domótica Abierta y Encapsulados 3D</strong></td>
+                <td>ESP32 + Sensores térmicos/humo/solar + Servomotores + Enclosures PETG</td>
+                <td><strong>Nov 2026 – Jun 2027</strong></td>
+                <td>Arquitectura electrónica validada en Medialab y carcasas impresas en 3D</td>
+              </tr>
+              <tr>
+                <td><span class="pill-badge pill-wood">DEV-06 · 09</span></td>
+                <td><strong>4. Producción del Prototipo a Escala en Madera (1:3)</strong></td>
+                <td><strong>Hibridación:</strong> Máquinas convencionales + Dispositivos Jigs 3D + Router CNC</td>
+                <td><strong>Abr 2027 – Dic 2027</strong></td>
+                <td>Estructura en madera, deck, cerramientos y mobiliario con uniones 3D</td>
+              </tr>
+              <tr>
+                <td><span class="pill-badge pill-navy">DEV-08 · 11</span></td>
+                <td><strong>5. Gemelo Digital en Unity VR y Puente Bidireccional MQTT</strong></td>
+                <td>Unity 6 URP (Meta Quest / PCVR) + Home Assistant + Broker MQTT en vivo</td>
+                <td><strong>May 2027 – Feb 2028</strong></td>
+                <td>Sincronización bidireccional en tiempo real: Prototipo Físico ↔ Gafas VR</td>
+              </tr>
+              <tr>
+                <td><span class="pill-badge pill-green">DEV-10 · 14</span></td>
+                <td><strong>6. Integración Domótica, Pruebas Móviles y Dossier INTERZUM</strong></td>
+                <td>Montaje final en seco, App Móvil, pruebas de estrés y Ficha Técnica Producto</td>
+                <td><strong>Nov 2027 – Mayo 2028</strong></td>
+                <td><strong>Prototipo Funcional a Escala + Gemelo VR exhibido en INTERZUM Bogotá</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SLIDE 10: CIERRE OFICIAL DE LA PLANTILLA ("GRACIAS" - FONDO #0E2A47)
+         ====================================================================== -->
+    <section class="slide" data-slide-index="9" data-time="Min 19:30 - 20:00 (0.5 min)" data-notes="Cierre de la presentación de 20 minutos ante el Comité Pedagógico. Quedamos atentos a las preguntas, aportes metodológicos y sugerencias de articulación curricular del Comité.">
+      <div class="thanks-slide-wrap">
+        <div class="anim-item delay-1" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; border-bottom:1px solid rgba(255,255,255,0.16); padding-bottom:20px;">
+          <div>
+            <span style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:#68D391; display:block;">
+              COMPETITIVIDAD &amp; DESARROLLO TECNOLÓGICO PRODUCTIVO · COMITÉ PEDAGÓGICO (NOV 2026)
+            </span>
+            <div style="font-size:18px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+              Centro Tecnológico del Mobiliario (CTM) · SENA Regional Antioquia
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; background:#FFFFFF; padding:10px 18px; border-radius:4px;">
+            <img src="./assets/img/presentacion/image5.jpg" alt="CTM SENA" style="height:46px; width:auto;" />
+            <img src="./assets/img/presentacion/image1.png" alt="Matermob" style="height:30px; width:auto;" />
+            <img src="./assets/img/presentacion/image2.png" alt="SENNOVA" style="height:36px; width:auto;" />
+          </div>
+        </div>
+
+        <div class="anim-item delay-2" style="text-align:center; my:auto;">
+          <div style="font-size:92px; font-weight:900; letter-spacing:0.06em; color:#FFFFFF; line-height:1;">
+            GRACIAS
+          </div>
+          <p style="font-size:20px; color:#CBD5E1; max-width:920px; margin:16px auto 28px auto; line-height:1.45;">
+            <strong style="color:#FFFFFF;">Geodome Smart:</strong> Fortaleciendo la línea medular de la madera y el mobiliario mediante la articulación de Carpintería, Ebanistería, Procesos BIM, Manufactura Híbrida (Convencional + Jigs 3D + CNC), Domótica Abierta y Gemelo Digital VR.
+          </p>
+
+          <div style="display:inline-flex; flex-wrap:wrap; justify-content:center; gap:14px;">
+            <a href="./index.html" class="ctrl-btn" style="background:var(--sena-green); border-color:var(--sena-green); padding:12px 22px; font-size:13.5px;">
+              🌐 Abrir Plataforma Web Completa (Formulación MGA &amp; Prototipo)
+            </a>
+            <button type="button" class="ctrl-btn" style="padding:12px 22px; font-size:13.5px;" onclick="goToSlide(0)">
+              ↺ Volver al Inicio de la Presentación
+            </button>
+          </div>
+        </div>
+
+        <div class="anim-item delay-3" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; border-top:1px solid rgba(255,255,255,0.16); padding-top:18px; font-size:12.5px; color:#94A3B8;">
+          <span>Ambiente 107 Medialab &amp; Talleres de Madera y Fabricación Digital CTM · Itagüí, Antioquia</span>
+          <span>Meta de Exhibición: INTERZUM Bogotá (Primera Semana de Mayo 2028)</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ========================================================================
+       GUION / NOTAS DEL EXPOSITOR (TELEPROMPTER 20 MINUTOS)
+       ======================================================================== -->
+  <div class="speaker-notes-drawer" id="speaker-notes-drawer">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+      <strong style="font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; color:#68D391;" id="notes-time-badge">
+        🎙️ GUION SUGERIDO (PAUTA DE 20 MINUTOS)
+      </strong>
+      <button type="button" class="ctrl-btn" style="padding:2px 8px; font-size:10.5px;" onclick="toggleSpeakerNotes()">
+        ✕ Ocultar Guion (Tecla N)
+      </button>
+    </div>
+    <p style="font-size:13.5px; line-height:1.5; color:#F1F5F9;" id="notes-text-content"></p>
+  </div>
+
+  <!-- ========================================================================
+       VISOR LIGHTBOX A PANTALLA COMPLETA PARA PLANOS E IMÁGENES
+       ======================================================================== -->
+  <div class="pres-lightbox" id="pres-lightbox" onclick="closePresLightbox()">
+    <div style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1200px; margin-bottom:12px; color:#FFFFFF;" onclick="event.stopPropagation()">
+      <strong id="pres-lightbox-title" style="font-size:15px; text-transform:uppercase; letter-spacing:0.04em;">Vista Ampliada</strong>
+      <button type="button" class="ctrl-btn" style="background:var(--wood-terracotta); border-color:var(--wood-terracotta);" onclick="closePresLightbox()">
+        ✕ Cerrar Vista Ampliada (ESC)
+      </button>
+    </div>
+    <img id="pres-lightbox-img" src="" alt="Vista ampliada" onclick="event.stopPropagation()" />
+  </div>
+
+  <!-- ========================================================================
+       BARRA INFERIOR DE NAVEGACIÓN, TEMPORIZADOR 20 MIN Y ACCIONES
+       ======================================================================== -->
+  <footer class="deck-controlbar">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <a href="./index.html" class="ctrl-btn" title="Volver a la plataforma principal Geodome Smart">
+        ← Plataforma Web
+      </a>
+      <button type="button" class="ctrl-btn" onclick="prevSlide()" title="Diapositiva anterior (Flecha Izquierda)">
+        ◀ Anterior
+      </button>
+      <button type="button" class="ctrl-btn" onclick="nextSlide()" title="Siguiente diapositiva (Flecha Derecha o Espacio)">
+        Siguiente ▶
+      </button>
+      <span style="font-size:12px; font-weight:800; color:#94A3B8; margin-left:6px;" id="slide-counter-label">
+        1 / 10
+      </span>
+    </div>
+
+    <!-- Indicadores numerados de las 10 diapositivas -->
+    <div class="slide-dots" id="slide-dots"></div>
+
+    <!-- Temporizador de 20 minutos + Guion + Pantalla Completa -->
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.08); padding:4px 10px; border:1px solid rgba(255,255,255,0.18);">
+        <span style="font-size:11px; color:#68D391; font-weight:800;">⏱ 20 MIN:</span>
+        <strong style="font-size:13px; font-variant-numeric:tabular-nums;" id="timer-display">20:00</strong>
+        <button type="button" style="background:transparent; border:none; color:#FFFFFF; cursor:pointer; font-size:11px; font-weight:800;" onclick="toggleTimer()" id="timer-btn" title="Iniciar / Pausar cronómetro de 20 minutos">
+          ▶
+        </button>
+        <button type="button" style="background:transparent; border:none; color:#94A3B8; cursor:pointer; font-size:11px;" onclick="resetTimer()" title="Reiniciar cronómetro a 20:00">
+          ↺
+        </button>
+      </div>
+
+      <button type="button" class="ctrl-btn" id="btn-notes" onclick="toggleSpeakerNotes()" title="Mostrar/Ocultar guion de exposición de 20 minutos (Tecla N)">
+        🎙️ Guion 20m
+      </button>
+
+      <button type="button" class="ctrl-btn" onclick="toggleFullScreen()" title="Pantalla Completa (Tecla F)">
+        ⛶ Pantalla Completa
+      </button>
+    </div>
+  </footer>
+
+  <!-- Cargar datos base de la plataforma y sincronizar con versión guardada en la web -->
+  <script src="./data/projectData.js?v=20261117"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dotsContainer = document.getElementById('slide-dots');
+      const counterLabel = document.getElementById('slide-counter-label');
+      const notesDrawer = document.getElementById('speaker-notes-drawer');
+      const notesTimeBadge = document.getElementById('notes-time-badge');
+      const notesTextContent = document.getElementById('notes-text-content');
+      const btnNotes = document.getElementById('btn-notes');
+
+      let currentSlide = 0;
+      let notesOpen = false;
+
+      // 1. Sincronizar dinámicamente el Nombre del Proyecto y Objetivos con la versión de la Web / Railway
+      function syncWithWebData() {
+        try {
+          let formulacion = (typeof PROJECT_DATA !== 'undefined' && PROJECT_DATA.formulacionMGA)
+            ? PROJECT_DATA.formulacionMGA
+            : [];
+
+          const savedLocal = localStorage.getItem('geodome_formulacion_exacta_v1');
+          if (savedLocal) {
+            const parsed = JSON.parse(savedLocal);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              formulacion = parsed;
+            }
+          }
+
+          const sec1 = formulacion.find(s => String(s.numeral) === '1');
+          const sec10 = formulacion.find(s => String(s.numeral) === '10');
+
+          const cleanText = (val) => String(val || '').replace(/^"+|"+$/g, '').trim();
+
+          if (sec1 && Array.isArray(sec1.campos)) {
+            const campoNombre = sec1.campos.find(c => c.id === '1.1') || sec1.campos[0];
+            if (campoNombre && campoNombre.valor) {
+              const nombreLimpio = cleanText(campoNombre.valor);
+              if (nombreLimpio) {
+                document.getElementById('pres-project-name').textContent = nombreLimpio;
+                document.getElementById('slide3-project-title').textContent = nombreLimpio;
+              }
+            }
+          }
+
+          if (sec10 && Array.isArray(sec10.campos)) {
+            const cGen = sec10.campos.find(c => c.id === '10.1');
+            const cOe1 = sec10.campos.find(c => c.id === '10.2.1');
+            const cOe2 = sec10.campos.find(c => c.id === '10.2.2');
+            const cOe3 = sec10.campos.find(c => c.id === '10.2.3');
+
+            if (cGen && cleanText(cGen.valor)) {
+              document.getElementById('slide3-obj-general').textContent = cleanText(cGen.valor);
+            }
+            if (cOe1 && cleanText(cOe1.valor)) {
+              document.getElementById('slide3-oe1').textContent = cleanText(cOe1.valor);
+            }
+            if (cOe2 && cleanText(cOe2.valor)) {
+              document.getElementById('slide3-oe2').textContent = cleanText(cOe2.valor);
+            }
+            if (cOe3 && cleanText(cOe3.valor)) {
+              document.getElementById('slide3-oe3').textContent = cleanText(cOe3.valor);
+            }
+          }
+        } catch (err) {
+          console.warn('Usando datos base de projectData.js:', err);
+        }
+      }
+
+      // 2. Construir botones de navegación por diapositiva
+      function renderDots() {
+        dotsContainer.innerHTML = slides.map((_, idx) => `
+          <button type="button"
+            class="slide-dot ${idx === currentSlide ? 'active' : ''}"
+            onclick="goToSlide(${idx})"
+            title="Ir a Diapositiva ${idx + 1}">
+            ${idx + 1}
+          </button>
+        `).join('');
+      }
+
+      function updateSlideClasses() {
+        slides.forEach((sl, idx) => {
+          sl.classList.remove('active', 'prev-slide');
+          if (idx === currentSlide) {
+            sl.classList.add('active');
+          } else if (idx < currentSlide) {
+            sl.classList.add('prev-slide');
+          }
+        });
+        counterLabel.textContent = `${currentSlide + 1} / ${slides.length}`;
+        renderDots();
+
+        // Actualizar guion de exposición de la diapositiva activa
+        const activeSl = slides[currentSlide];
+        const timeStr = activeSl.getAttribute('data-time') || '';
+        const noteStr = activeSl.getAttribute('data-notes') || '';
+        notesTimeBadge.textContent = `🎙️ GUION DIAPOSITIVA ${currentSlide + 1} · ${timeStr}`;
+        notesTextContent.textContent = noteStr;
+      }
+
+      window.goToSlide = function (index) {
+        currentSlide = Math.max(0, Math.min(slides.length - 1, Number(index) || 0));
+        updateSlideClasses();
+      };
+
+      window.nextSlide = function () {
+        if (currentSlide < slides.length - 1) {
+          currentSlide++;
+          updateSlideClasses();
+        }
+      };
+
+      window.prevSlide = function () {
+        if (currentSlide > 0) {
+          currentSlide--;
+          updateSlideClasses();
+        }
+      };
+
+      window.toggleSpeakerNotes = function () {
+        notesOpen = !notesOpen;
+        notesDrawer.classList.toggle('open', notesOpen);
+        btnNotes.classList.toggle('active-toggle', notesOpen);
+      };
+
+      window.toggleFullScreen = function () {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      };
+
+      // 3. Visor Lightbox para imágenes y planos
+      window.openPresLightbox = function (src, title) {
+        const lb = document.getElementById('pres-lightbox');
+        const img = document.getElementById('pres-lightbox-img');
+        const ttl = document.getElementById('pres-lightbox-title');
+        img.src = src;
+        ttl.textContent = title || 'Vista Ampliada';
+        lb.classList.add('open');
+      };
+
+      window.closePresLightbox = function () {
+        document.getElementById('pres-lightbox').classList.remove('open');
+      };
+
+      // 4. Cronómetro de 20 minutos para controlar el ritmo de la exposición
+      let remainingSeconds = 20 * 60;
+      let timerInterval = null;
+      const timerDisplay = document.getElementById('timer-display');
+      const timerBtn = document.getElementById('timer-btn');
+
+      function formatTimer(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+
+      window.toggleTimer = function () {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          timerBtn.textContent = '▶';
+        } else {
+          timerBtn.textContent = '⏸';
+          timerInterval = setInterval(() => {
+            if (remainingSeconds > 0) {
+              remainingSeconds--;
+              timerDisplay.textContent = formatTimer(remainingSeconds);
+            } else {
+              clearInterval(timerInterval);
+              timerInterval = null;
+              timerBtn.textContent = '▶';
+            }
+          }, 1000);
+        }
+      };
+
+      window.resetTimer = function () {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        remainingSeconds = 20 * 60;
+        timerDisplay.textContent = '20:00';
+        timerBtn.textContent = '▶';
+      };
+
+      // 5. Atajos de teclado para navegación fluida durante la exposición
+      window.addEventListener('keydown', (e) => {
+        const lb = document.getElementById('pres-lightbox');
+        if (lb.classList.contains('open')) {
+          if (e.key === 'Escape') window.closePresLightbox();
+          return;
+        }
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault();
+          window.nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          window.prevSlide();
+        } else if (e.key === 'n' || e.key === 'N') {
+          window.toggleSpeakerNotes();
+        } else if (e.key === 'f' || e.key === 'F') {
+          window.toggleFullScreen();
+        } else if (e.key === 'Home') {
+          window.goToSlide(0);
+        } else if (e.key === 'End') {
+          window.goToSlide(slides.length - 1);
+        }
+      });
+
+      syncWithWebData();
+      updateSlideClasses();
+    })();
+  </script>
+</body>
+</html>

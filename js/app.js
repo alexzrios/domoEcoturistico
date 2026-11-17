@@ -456,6 +456,9 @@
               </div>
 
               <div class="header-actions">
+                <a href="./presentacion.html" class="btn btn-primary" style="background:#0F4475; border-color:#0F4475; text-decoration:none;">
+                  🎬 Presentación Comité (20 min)
+                </a>
                 <button class="btn btn-primary" onclick="exportWordDocument('Plantilla_MGA')">
                   📄 Formulación MGA (.doc)
                 </button>
